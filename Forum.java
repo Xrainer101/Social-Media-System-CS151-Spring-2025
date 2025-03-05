@@ -32,6 +32,10 @@ public class Forum {
             System.out.println("Enter password: ");
             String password = s.nextLine();
             Users.add(new Consumer(username, password));
+            System.out.println();
+            System.out.println("Signup successful");
+            System.out.println();
+            System.out.println();
         }
         else if(input.equals("L")) {
             System.out.println("Enter username: ");
@@ -39,12 +43,19 @@ public class Forum {
             System.out.println("Enter password: ");
             String password = s.nextLine();
             if(validateInfo(username, password)) {
+               System.out.println();
+               System.out.println("Login successful!");
+               System.out.println();
+               System.out.println();
                doneSetup = true;
                home = false;
             }
             else {
+                System.out.println();
                 System.out.println("Incorrect password or username");
                 System.out.println("Try again!");
+                System.out.println();
+                System.out.println();
             }
             
         }
