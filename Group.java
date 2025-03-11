@@ -22,5 +22,12 @@ public class Group  {
         System.out.println(consumer.getUsername() + " is added to the group.");
     }
 
+    public void makeModerator(Consumer consumer) {
+        if(!groupMembers.contains(consumer)) {
+            System.out.println("Group member does not exist.");
+        } else {
+            moderators.add(consumer);
+            System.out.println(consumer.getUsername() + " is now a moderator.");
+        }
     }
-
+}
