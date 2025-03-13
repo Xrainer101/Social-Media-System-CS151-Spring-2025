@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Forum {
-    static ArrayList<Consumer> Users = new ArrayList<Consumer>();
+    public static ArrayList<Consumer> Users = new ArrayList<Consumer>();
     private static Consumer current = null;
     static boolean home = true;
    public static void main(String[] args) {
