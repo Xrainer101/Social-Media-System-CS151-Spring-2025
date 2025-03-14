@@ -4,7 +4,7 @@ public class Group  {
     private boolean searchable;
     private String name;
     private ArrayList<Consumer> groupMembers = new ArrayList<Consumer>();
-    private ArrayList<Consumer> moderators = new ArrayList<Consumer>(); // change to Moderator object when class is created
+    private ArrayList<Moderator> moderators = new ArrayList<Moderator>(); // change to Moderator object when class is created
 
     public Group(String name) {
         this.name = name;
@@ -26,7 +26,8 @@ public class Group  {
         if(!groupMembers.contains(consumer)) {
             System.out.println("Group member does not exist.");
         } else {
-            moderators.add(consumer);
+            Moderator newModerator = new Moderator(consumer);
+            moderators.add(newModerator);
             System.out.println(consumer.getUsername() + " is now a moderator.");
         }
     }
