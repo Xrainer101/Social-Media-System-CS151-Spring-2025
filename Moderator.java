@@ -1,9 +1,9 @@
 import java.util.Scanner;
 public class Moderator {
-    private Consumer mod;
+    private Consumer moderator;
     private Group g;
-    public Moderator(Consumer mod) {
-        this.mod = mod;
+    public Moderator(Consumer moderator) {
+        this.moderator = moderator;
     }
 
     public void deleteUser(Consumer user) {
