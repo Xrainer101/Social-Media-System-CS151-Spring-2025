@@ -22,6 +22,14 @@ public class Group  {
         return groupMembers;
     }
 
+    public boolean getSearchable() {
+        return searchable;
+    }
+
+    public void isSearchable(boolean searchable) {
+        this.searchable = searchable;
+    }
+
     public void changeGroupName(String name, Consumer current) {
         boolean nameChanged = false;
         for(Moderator moderator: moderators) {
