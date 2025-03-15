@@ -5,6 +5,7 @@ public class Group  {
     private String name;
     private ArrayList<Consumer> groupMembers = new ArrayList<Consumer>();
     private ArrayList<Moderator> moderators = new ArrayList<Moderator>(); // change to Moderator object when class is created
+    private ArrayList<Consumer> joinRequests = new ArrayList<Consumer>();
 
     public Group(String name) {
         this.name = name;
@@ -15,6 +16,16 @@ public class Group  {
 
     public void changeGroupName(String name) {
         this.name = name;
+    }
+
+    public void requestJoin(Consumer consumer) {
+        if (!joinRequests.contains(consumer) && !groupMembers.contains(consumer)) {
+            joinRequests.add(consumer);
+        } else if (joinRequests.contains(consumer)) {
+            System.out.println(consumer.getUsername() + " has already sent a request to join.");
+        } else if (groupMembers.contains(consumer)) {
+            System.out.println(consumer.getUsername() + " is already in the group.");
+        }
     }
 
     public ArrayList<Consumer> getGroupMembers() {
