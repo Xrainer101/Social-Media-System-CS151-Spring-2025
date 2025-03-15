@@ -13,6 +13,10 @@ public class Group  {
         return name;
     }
 
+    public void changeGroupName(String name) {
+        this.name = name;
+    }
+
     public ArrayList<Consumer> getGroupMembers() {
         return groupMembers;
     }
@@ -31,4 +35,6 @@ public class Group  {
             System.out.println(consumer.getUsername() + " is now a moderator.");
         }
     }
+
+
 }
