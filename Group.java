@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Group  {
-    private boolean searchable;
+    private boolean searchable = true;
     private String name;
     private ArrayList<Consumer> groupMembers = new ArrayList<Consumer>();
     private ArrayList<Moderator> moderators = new ArrayList<Moderator>();
@@ -20,6 +20,10 @@ public class Group  {
 
     public ArrayList<Consumer> getGroupMembers() {
         return groupMembers;
+    }
+
+    public ArrayList<Moderator> getModerators() {
+        return moderators;
     }
 
     public boolean getSearchable() {
