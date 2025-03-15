@@ -6,6 +6,10 @@ public class Moderator {
         this.moderator = moderator;
     }
 
+    public Consumer getModerator() {
+        return moderator;
+    }
+
     public void deleteUser(Consumer user) {
         System.out.println("Do you really want to delete: " + user.getUsername() + "?");
         Scanner sc = new Scanner(System.in);
