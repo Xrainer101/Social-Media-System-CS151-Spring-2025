@@ -4,7 +4,7 @@ public class Group  {
     private boolean searchable;
     private String name;
     private ArrayList<Consumer> groupMembers = new ArrayList<Consumer>();
-    private ArrayList<Moderator> moderators = new ArrayList<Moderator>(); // change to Moderator object when class is created
+    private ArrayList<Moderator> moderators = new ArrayList<Moderator>();
     private ArrayList<Consumer> joinRequests = new ArrayList<Consumer>();
 
     public Group(String name) {
@@ -14,17 +14,28 @@ public class Group  {
         return name;
     }
 
-    public void changeGroupName(String name) {
-        this.name = name;
+    public void changeGroupName(String name, Consumer current) {
+        boolean nameChanged = false;
+        for(Moderator moderator: moderators) {
+            if (current.equals(moderator.getModerator()); {
+                this.name = name;
+                nameChanged = true;
+                System.out.println("Group name has been changed to " + name);
+                break;
+            }
+        }
+        if (!nameChanged) {
+            System.out.println("Only moderators can change the group name.");
+        }
     }
 
-    public void requestJoin(Consumer consumer) {
-        if (!joinRequests.contains(consumer) && !groupMembers.contains(consumer)) {
-            joinRequests.add(consumer);
-        } else if (joinRequests.contains(consumer)) {
-            System.out.println(consumer.getUsername() + " has already sent a request to join.");
-        } else if (groupMembers.contains(consumer)) {
-            System.out.println(consumer.getUsername() + " is already in the group.");
+    public void requestJoin(Consumer current) {
+        if (!joinRequests.contains(current) && !groupMembers.contains(current)) {
+            joinRequests.add(current);
+        } else if (joinRequests.contains(current)) {
+            System.out.println("You already sent a request to join.");
+        } else if (groupMembers.contains(current)) {
+            System.out.println("You are already in the group.");
         }
     }
 
