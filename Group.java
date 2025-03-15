@@ -17,7 +17,7 @@ public class Group  {
     public void changeGroupName(String name, Consumer current) {
         boolean nameChanged = false;
         for(Moderator moderator: moderators) {
-            if (current.equals(moderator.getModerator()); {
+            if (current.equals(moderator.getModerator())); {
                 this.name = name;
                 nameChanged = true;
                 System.out.println("Group name has been changed to " + name);
