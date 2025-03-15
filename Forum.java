@@ -108,7 +108,7 @@ public class Forum {
                 }
                 System.out.println("Moderators: ");
                 for (Moderator m: viewedGroup.getModerators()) {
-
+                    System.out.println(m.getModerator().getUsername());
                 }
                 System.out.println("Members: ");
                 for (Consumer member: viewedGroup.getGroupMembers()) {
