@@ -14,6 +14,14 @@ public class Group  {
         return name;
     }
 
+    public ArrayList<Consumer> getJoinRequests() {
+        return joinRequests;
+    }
+
+    public ArrayList<Consumer> getGroupMembers() {
+        return groupMembers;
+    }
+
     public void changeGroupName(String name, Consumer current) {
         boolean nameChanged = false;
         for(Moderator moderator: moderators) {
@@ -39,12 +47,8 @@ public class Group  {
         }
     }
 
-    public ArrayList<Consumer> getJoinRequests() {
-        return joinRequests;
-    }
+    public void joinRequestList() {
 
-    public ArrayList<Consumer> getGroupMembers() {
-        return groupMembers;
     }
 
     public void addMember(Consumer consumer) {
