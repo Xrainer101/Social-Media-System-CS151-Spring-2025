@@ -39,6 +39,10 @@ public class Group  {
         }
     }
 
+    public ArrayList<Consumer> getJoinRequests() {
+        return joinRequests;
+    }
+
     public ArrayList<Consumer> getGroupMembers() {
         return groupMembers;
     }
