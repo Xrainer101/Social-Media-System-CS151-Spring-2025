@@ -102,44 +102,58 @@ public class Forum {
                 Group viewedGroup = new Group("");
                 for (Group g: groups) {
                     if (g.getGroupName().equalsIgnoreCase(input)) {
-                        System.out.println(g.getGroupName());
+                        System.out.println("Viewing group: " + g.getGroupName());
                         viewedGroup = g;
                     }
                 }
-                System.out.println("Moderators: ");
+                System.out.print("Moderators: ");
                 for (Moderator m: viewedGroup.getModerators()) {
-                    System.out.println(m.getModerator().getUsername());
+                    System.out.print(m.getModerator().getUsername() + " ");
                 }
-                System.out.println("Members: ");
+                System.out.print("\nMembers: ");
                 for (Consumer member: viewedGroup.getGroupMembers()) {
-                    System.out.println(member.getUsername());
+                    System.out.print(member.getUsername() + " ");
                 }
+                System.out.println();
             } else if (input.equalsIgnoreCase("c")) {
+                boolean groupExists = false;
                 System.out.println("What is the name of the group you would like to create?");
-                input = s.nextLine();
-                groups.add(new Group(input));
-                String groupName = input;
-                System.out.println("New group \"" + input + "\" has been created.");
-                System.out.println("Would you like it to be listed publicly in the group view?\ny or n");
-                input = s.nextLine();
-                if (input.equalsIgnoreCase("y")) {
-                    for (Group g : groups) {
-                        if (g.getGroupName().equals(groupName)) {
-                            g.isSearchable(true);
-                            System.out.println("Group " + groupName + " will be listed.");
-                        }
+                String groupName = s.nextLine();
+                for(Group g: groups) {
+                    if (g.getGroupName().equalsIgnoreCase(groupName)) {
+                        groupExists = true;
                     }
-                } else if (input.equalsIgnoreCase("n")) {
-                    for (Group g : groups) {
-                        if (g.getGroupName().equals(groupName)) {
-                            g.isSearchable(false);
-                            System.out.println("Group " + groupName + " will not be listed.");
+                }
+                if (!groupExists) {
+                    groups.add(new Group(groupName));
+                    System.out.println("New group \"" + groupName + "\" has been created.");
+                    System.out.println("Would you like it to be listed publicly in the group view?\ny or n");
+                    input = s.nextLine();
+                    if (input.equalsIgnoreCase("y")) {
+                        for (Group g : groups) {
+                            if (g.getGroupName().equals(groupName)) {
+                                g.isSearchable(true);
+                                g.addMember(current);
+                                g.makeModerator(current);
+                                System.out.println("Group \"" + groupName + "\" will be listed.");
+                            }
                         }
+                    } else if (input.equalsIgnoreCase("n")) {
+                        for (Group g : groups) {
+                            if (g.getGroupName().equals(groupName)) {
+                                g.isSearchable(false);
+                                g.addMember(current);
+                                g.makeModerator(current);
+                                System.out.println("Group " + groupName + " will not be listed.");
+                            }
+                        }
+                    } else {
+                        System.out.println("Invalid Input");
                     }
                 } else {
-                    System.out.println("Invalid Input");
+                  System.out.println("Cannot create group, one already exists with this name.");
                 }
-            } else {
+                } else {
                 System.out.println("Invalid Input");
             }
          }
