@@ -3,16 +3,22 @@ import java.util.ArrayList;
 public class Group  {
     private boolean searchable = true;
     private String name;
+    private Moderator owner;
     private ArrayList<Consumer> groupMembers = new ArrayList<Consumer>();
     private ArrayList<Moderator> moderators = new ArrayList<Moderator>();
     private ArrayList<Consumer> joinRequests = new ArrayList<Consumer>();
     private ArrayList<Consumer> invited = new ArrayList<Consumer>();
 
-    public Group(String name) {
+    public Group(String name, Moderator owner) {
         this.name = name;
+        this.owner = owner;
     }
     public String getGroupName() {
         return name;
+    }
+
+    public Moderator getOwner() {
+        return owner;
     }
 
     public ArrayList<Consumer> getJoinRequests() {
@@ -33,6 +39,10 @@ public class Group  {
 
     public void isSearchable(boolean searchable) {
         this.searchable = searchable;
+    }
+
+    public void setOwner(Moderator owner) {
+        this.owner = owner;
     }
 
     public void changeGroupName(String name, Consumer current) {
@@ -102,6 +112,11 @@ public class Group  {
         System.out.println(consumer.getUsername() + " is added to the group.");
     }
 
+    public void removeMember(Consumer consumer) {
+        removeMember(consumer);
+        System.out.println(consumer.getUsername() + " is removed from the group.");
+    }
+
     public void metrics() {
         System.out.println("Viewing: " + getGroupName());
         System.out.print("Moderators: ");
@@ -134,5 +149,10 @@ public class Group  {
         }
     }
 
+    public void demoteModerator(Moderator moderator) {
+            groupMembers.add(moderator.getModerator());
+            System.out.println(moderator.getModerator().getUsername() + " is now a regular member.");
+            moderators.remove(moderator);
+    }
 
 }

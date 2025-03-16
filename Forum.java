@@ -100,7 +100,7 @@ public class Forum {
                     }
                 }
                 input = s.nextLine();
-                Group viewedGroup = new Group("");
+                Group viewedGroup = null;
                 for (Group g : groups) {
                     if (g.getGroupName().equalsIgnoreCase(input)) {
                         viewedGroup = g;
@@ -111,14 +111,37 @@ public class Forum {
                     viewedGroup.metrics();
                 for (Moderator m : viewedGroup.getModerators()) {
                     if (m.getModerator().equals(current) && !viewedGroup.getGroupMembers().contains(current)) {
-                        System.out.println("You are a moderator of the group.");
+                        if (viewedGroup.getOwner().getModerator().equals(current)) {
+                            System.out.println("You are the owner of this group.");
+                            System.out.println("d: demote moderator");
+                        } else {
+                            System.out.println("You are a moderator of the group.");
+                        }
                         System.out.println("i: invite");
                         System.out.println("c: change group name");
                         System.out.println("r: remove member");
                         System.out.println("a: accept join requests");
                         System.out.println("m: make member moderator");
                         input = s.nextLine();
-                        if (input.equalsIgnoreCase("i")) {
+                        if (viewedGroup.getOwner().getModerator().equals(current) && input.equalsIgnoreCase("d")) {
+                            System.out.println("Enter the name of the moderator you would like to demote: ");
+                            boolean notAModerator = false;
+                            input = s.nextLine();
+                            for (Consumer c: viewedGroup.getGroupMembers()) {
+                                if (c.getUsername().equalsIgnoreCase(input)) {
+                                    notAModerator = true;
+                                }
+                            }
+                            if (notAModerator) {
+                                System.out.println("Cannot demote a regular user.");
+                            } else if (!notAModerator) {
+                                for (Moderator mo: viewedGroup.getModerators()) {
+                                   if (mo.getModerator().getUsername().equalsIgnoreCase(input)) {
+                                       viewedGroup.demoteModerator(mo);
+                                   }
+                                }
+                            }
+                        } else if (input.equalsIgnoreCase("i")) {
                             System.out.println("Input the username of who you would like to invite: ");
                             boolean foundUser = false;
                             input = s.nextLine();
@@ -188,7 +211,7 @@ public class Forum {
                     }
                 }
                 if (!groupExists) {
-                    groups.add(new Group(groupName));
+                    groups.add(new Group(groupName, new Moderator(current)));
                     System.out.println("New group \"" + groupName + "\" has been created.");
                     System.out.println("Would you like it to be listed publicly in the group view?\ny or n");
                     input = s.nextLine();
