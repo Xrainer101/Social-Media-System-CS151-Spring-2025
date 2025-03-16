@@ -51,17 +51,25 @@ public class Group  {
     }
 
     public void requestJoin(Consumer current) {
+        boolean isMod = false;
+        for(Moderator m: moderators) {
+            if(m.getModerator().equals(current)) {
+                isMod = true;
+            }
+        }
         if (!joinRequests.contains(current) && !groupMembers.contains(current)) {
             joinRequests.add(current);
         } else if (joinRequests.contains(current)) {
             System.out.println("You already sent a request to join.");
-        } else if (groupMembers.contains(current)) {
+        } else if (groupMembers.contains(current) || isMod) {
             System.out.println("You are already in the group.");
         }
     }
 
-    public void joinRequestList() {
-
+    public void acceptJoinRequest(Consumer consumer) {
+            joinRequests.remove(consumer);
+            groupMembers.add(consumer);
+            System.out.println(consumer.getUsername() + " is accepted into the group.");
     }
 
     public void sendInvite(Consumer consumer) {

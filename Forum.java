@@ -147,6 +147,18 @@ public class Forum {
                         } else if (input.equalsIgnoreCase("r")) {
                             System.out.println("Enter the name of the person you wish to remove: ");
 
+                        } else if (input.equalsIgnoreCase("a")) {
+                            System.out.print("Join Requests: ");
+                            for (Consumer c: viewedGroup.getJoinRequests()) {
+                                System.out.print(c.getUsername() + " ");
+                            }
+                            System.out.println("\nEnter the name of the person you wish to accept: ");
+                            input = s.nextLine();
+                            for (Consumer c: viewedGroup.getJoinRequests()) {
+                                if (input.equalsIgnoreCase(c.getUsername())) {
+                                    viewedGroup.acceptJoinRequest(c);
+                                }
+                            }
                         }
                     } else if (viewedGroup.getGroupMembers().contains(current)) {
                         System.out.println("You are a member of the group.");
