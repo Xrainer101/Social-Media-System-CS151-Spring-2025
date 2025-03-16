@@ -102,19 +102,10 @@ public class Forum {
                 Group viewedGroup = new Group("");
                 for (Group g: groups) {
                     if (g.getGroupName().equalsIgnoreCase(input)) {
-                        System.out.println("Viewing group: " + g.getGroupName());
                         viewedGroup = g;
                     }
                 }
-                System.out.print("Moderators: ");
-                for (Moderator m: viewedGroup.getModerators()) {
-                    System.out.print(m.getModerator().getUsername() + " ");
-                }
-                System.out.print("\nMembers: ");
-                for (Consumer member: viewedGroup.getGroupMembers()) {
-                    System.out.print(member.getUsername() + " ");
-                }
-                System.out.println();
+                viewedGroup.metrics();
             } else if (input.equalsIgnoreCase("c")) {
                 boolean groupExists = false;
                 System.out.println("What is the name of the group you would like to create?");

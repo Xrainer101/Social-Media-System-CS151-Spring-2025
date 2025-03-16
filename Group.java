@@ -74,7 +74,7 @@ public class Group  {
         for (Moderator m: moderators) {
             System.out.print(m.getModerator().getUsername() + " ");
         }
-        System.out.print("Members: ");
+        System.out.print("\nMembers: ");
         for (Consumer c: groupMembers) {
             System.out.print(c.getUsername() + " ");
         }
