@@ -91,22 +91,25 @@ public class Forum {
             }
             System.out.println("v: view\nc: create");
             input = s.nextLine();
+            boolean validGroup = false;
             if (input.equalsIgnoreCase("v")) {
                 System.out.println("Which group would you like to view?");
-                for (Group g: groups) {
+                for (Group g : groups) {
                     if (g.getSearchable()) {
                         System.out.println(g.getGroupName());
                     }
                 }
                 input = s.nextLine();
                 Group viewedGroup = new Group("");
-                for (Group g: groups) {
+                for (Group g : groups) {
                     if (g.getGroupName().equalsIgnoreCase(input)) {
                         viewedGroup = g;
+                        validGroup = true;
                     }
                 }
-                viewedGroup.metrics();
-                for (Moderator m: viewedGroup.getModerators()) {
+                if (validGroup) {
+                    viewedGroup.metrics();
+                for (Moderator m : viewedGroup.getModerators()) {
                     if (m.getModerator().equals(current) && !viewedGroup.getGroupMembers().contains(current)) {
                         System.out.println("You are a moderator of the group.");
                         System.out.println("i: invite");
@@ -119,7 +122,7 @@ public class Forum {
                             System.out.println("Input the username of who you would like to invite: ");
                             boolean foundUser = false;
                             input = s.nextLine();
-                            for (Consumer c: Users) {
+                            for (Consumer c : Users) {
                                 if (c.getUsername().equalsIgnoreCase(input)) {
                                     foundUser = true;
                                     viewedGroup.sendInvite(c);
@@ -132,7 +135,7 @@ public class Forum {
                             System.out.println("What would you like to change the group name to?");
                             input = s.nextLine();
                             boolean duplicateName = false;
-                            for (Group g: groups) {
+                            for (Group g : groups) {
                                 if (g.getGroupName().equals(input)) {
                                     duplicateName = true;
                                 }
@@ -149,20 +152,31 @@ public class Forum {
 
                         } else if (input.equalsIgnoreCase("a")) {
                             System.out.print("Join Requests: ");
-                            for (Consumer c: viewedGroup.getJoinRequests()) {
+                            for (Consumer c : viewedGroup.getJoinRequests()) {
                                 System.out.print(c.getUsername() + " ");
                             }
                             System.out.println("\nEnter the name of the person you wish to accept: ");
                             input = s.nextLine();
-                            for (Consumer c: viewedGroup.getJoinRequests()) {
+                            for (Consumer c : viewedGroup.getJoinRequests()) {
                                 if (input.equalsIgnoreCase(c.getUsername())) {
                                     viewedGroup.acceptJoinRequest(c);
+                                }
+                            }
+                        } else if (input.equalsIgnoreCase("m")) {
+                            System.out.println("Enter the name of the member you wish to make moderator: ");
+                            input = s.nextLine();
+                            for (Consumer c : viewedGroup.getGroupMembers()) {
+                                if (input.equalsIgnoreCase(c.getUsername())) {
+                                    viewedGroup.makeModerator(c);
                                 }
                             }
                         }
                     } else if (viewedGroup.getGroupMembers().contains(current)) {
                         System.out.println("You are a member of the group.");
                     }
+                }
+            } else {
+                    System.out.println("Invalid group name");
                 }
             } else if (input.equalsIgnoreCase("c")) {
                 boolean groupExists = false;
