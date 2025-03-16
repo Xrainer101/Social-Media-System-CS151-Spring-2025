@@ -68,6 +68,19 @@ public class Group  {
         System.out.println(consumer.getUsername() + " is added to the group.");
     }
 
+    public void metrics() {
+        System.out.println("Viewing: " + getGroupName());
+        System.out.print("Moderators: ");
+        for (Moderator m: moderators) {
+            System.out.print(m.getModerator().getUsername() + " ");
+        }
+        System.out.print("Members: ");
+        for (Consumer c: groupMembers) {
+            System.out.print(c.getUsername() + " ");
+        }
+        System.out.println();
+    }
+
     public void makeModerator(Consumer consumer) {
         boolean isModerator = false;
         for(Moderator m: moderators) {
