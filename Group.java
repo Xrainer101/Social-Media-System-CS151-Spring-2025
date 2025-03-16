@@ -6,6 +6,7 @@ public class Group  {
     private ArrayList<Consumer> groupMembers = new ArrayList<Consumer>();
     private ArrayList<Moderator> moderators = new ArrayList<Moderator>();
     private ArrayList<Consumer> joinRequests = new ArrayList<Consumer>();
+    private ArrayList<Consumer> invited = new ArrayList<Consumer>();
 
     public Group(String name) {
         this.name = name;
@@ -61,6 +62,31 @@ public class Group  {
 
     public void joinRequestList() {
 
+    }
+
+    public void sendInvite(Consumer consumer) {
+        boolean alreadyInvited = false;
+        for (Consumer c : groupMembers) {
+            if (c.equals(consumer)) {
+                alreadyInvited = true;
+            }
+        }
+        for (Moderator m : moderators) {
+            if (m.getModerator().equals(consumer)) {
+                alreadyInvited = true;
+            }
+        }
+        for (Consumer c : invited) {
+            if (c.equals(consumer)) {
+                alreadyInvited = true;
+            }
+        }
+        if (alreadyInvited) {
+            System.out.println("User is ineligible for an invite, they are already in or have a pending invite.");
+        } else {
+            System.out.println("Sent a group invite to: " + consumer.getUsername());
+            invited.add(consumer);
+        }
     }
 
     public void addMember(Consumer consumer) {
