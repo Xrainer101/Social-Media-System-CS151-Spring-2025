@@ -89,7 +89,7 @@ public class Forum {
                     System.out.println(g.getGroupName());
                 }
             }
-            System.out.println("Would you like to (v)iew or (c)reate a group?");
+            System.out.println("v: view\nc: create");
             input = s.nextLine();
             if (input.equalsIgnoreCase("v")) {
                 System.out.println("Which group would you like to view?");
@@ -106,6 +106,52 @@ public class Forum {
                     }
                 }
                 viewedGroup.metrics();
+                for (Moderator m: viewedGroup.getModerators()) {
+                    if (m.getModerator().equals(current) && !viewedGroup.getGroupMembers().contains(current)) {
+                        System.out.println("You are a moderator of the group.");
+                        System.out.println("i: invite");
+                        System.out.println("c: change group name");
+                        System.out.println("r: remove member");
+                        System.out.println("a: accept join requests");
+                        System.out.println("m: make member moderator");
+                        input = s.nextLine();
+                        if (input.equalsIgnoreCase("i")) {
+                            System.out.println("Input the username of who you would like to invite: ");
+                            boolean foundUser = false;
+                            input = s.nextLine();
+                            for (Consumer c: Users) {
+                                if (c.getUsername().equalsIgnoreCase(input)) {
+                                    foundUser = true;
+                                    viewedGroup.sendInvite(c);
+                                }
+                            }
+                            if (!foundUser) {
+                                System.out.println("User does not exist in the database.");
+                            }
+                        } else if (input.equalsIgnoreCase("c")) {
+                            System.out.println("What would you like to change the group name to?");
+                            input = s.nextLine();
+                            boolean duplicateName = false;
+                            for (Group g: groups) {
+                                if (g.getGroupName().equals(input)) {
+                                    duplicateName = true;
+                                }
+                            }
+                            if (input.equalsIgnoreCase(viewedGroup.getGroupName())) {
+                                System.out.println("Your group already has that name.");
+                            } else if (duplicateName) {
+                                System.out.println("Another group already has that name.");
+                            } else {
+                                viewedGroup.changeGroupName(input, current);
+                            }
+                        } else if (input.equalsIgnoreCase("r")) {
+                            System.out.println("Enter the name of the person you wish to remove: ");
+
+                        }
+                    } else if (viewedGroup.getGroupMembers().contains(current)) {
+                        System.out.println("You are a member of the group.");
+                    }
+                }
             } else if (input.equalsIgnoreCase("c")) {
                 boolean groupExists = false;
                 System.out.println("What is the name of the group you would like to create?");

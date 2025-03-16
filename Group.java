@@ -82,7 +82,7 @@ public class Group  {
             }
         }
         if (alreadyInvited) {
-            System.out.println("User is ineligible for an invite, they are already in or have a pending invite.");
+            System.out.println("User is ineligible for an invite.");
         } else {
             System.out.println("Sent a group invite to: " + consumer.getUsername());
             invited.add(consumer);
