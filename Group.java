@@ -69,10 +69,19 @@ public class Group  {
     }
 
     public void makeModerator(Consumer consumer) {
-        if(!groupMembers.contains(consumer)) {
+        boolean isModerator = false;
+        for(Moderator m: moderators) {
+            if (m.getModerator().equals(consumer)) {
+                isModerator = true;
+            }
+        }
+        if (isModerator) {
+            System.out.println(consumer.getUsername() + " is already a moderator.");
+        } else if(!groupMembers.contains(consumer)) {
             System.out.println("Group member does not exist.");
         } else {
             Moderator newModerator = new Moderator(consumer);
+            groupMembers.remove(consumer);
             moderators.add(newModerator);
             System.out.println(consumer.getUsername() + " is now a moderator.");
         }
