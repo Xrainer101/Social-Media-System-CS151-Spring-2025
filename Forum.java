@@ -86,7 +86,7 @@ public class Forum {
             System.out.println("Public Groups: ");
             for (Group g: groups) {
                 if (g.getSearchable()) {
-                    System.out.println(g.getGroupName());
+                    System.out.println("   " + g.getGroupName());
                 }
             }
             System.out.println("v: view");
