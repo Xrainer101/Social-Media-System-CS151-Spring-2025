@@ -116,10 +116,10 @@ public class Forum {
                     }//for (Moderator mn : viewedGroup.getModerators()) {
                     if (owner) {
                         if (viewedGroup.getOwner().getModerator().equals(current)) {
-                            System.out.println("You are the owner of this group.");
+                            System.out.println("\nYou are the owner of this group.");
                             System.out.println("d: demote moderator");
                         } else {
-                            System.out.println("You are a moderator of the group.");
+                            System.out.println("\nYou are a moderator of the group.");
                         }
                         System.out.println("l: leave group");
                         System.out.println("i: invite");
@@ -145,9 +145,9 @@ public class Forum {
                                        viewedGroup.demoteModerator(mo);
                                    }
                                 } */
-                                for(int j = 0; i < viewedGroup.getModerators().size(); i++) {
-                                    if (viewedGroup.getModerators().get(i).getModerator().getUsername().equalsIgnoreCase(input)) {
-                                        viewedGroup.demoteModerator(viewedGroup.getModerators().get(i));
+                                for(int j = 0; j < viewedGroup.getModerators().size(); j++) {
+                                    if (viewedGroup.getModerators().get(j).getModerator().getUsername().equalsIgnoreCase(input)) {
+                                        viewedGroup.demoteModerator(viewedGroup.getModerators().get(j));
                                     }
                                 }
                             }

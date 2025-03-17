@@ -122,12 +122,20 @@ public class Group  {
     public void metrics() {
         System.out.println("Viewing: " + getGroupName());
         System.out.println("Moderators: ");
-        for (Moderator m: moderators) {
-            System.out.println(m.getModerator().getUsername());
+        if (moderators.isEmpty()) {
+            System.out.println("No moderators");
+        } else {
+            for (Moderator m : moderators) {
+                System.out.println(m.getModerator().getUsername());
+            }
         }
-        System.out.println("Members: ");
-        for (Consumer c: groupMembers) {
-            System.out.println(c.getUsername());
+        System.out.println("\nMembers: ");
+        if (groupMembers.isEmpty()) {
+            System.out.println("No members");
+        } else {
+            for (Consumer c : groupMembers) {
+                System.out.println(c.getUsername());
+            }
         }
     }
 
@@ -151,11 +159,11 @@ public class Group  {
     }
 
     public void demoteModerator(Moderator moderator) {
-        if(!moderator.equals(owner)) {
+        if(!moderator.getModerator().getUsername().equals(owner.getModerator().getUsername())) {
             groupMembers.add(moderator.getModerator());
             System.out.println(moderator.getModerator().getUsername() + " is now a regular member.");
             moderators.remove(moderator);
-        } else if (moderator.equals(owner)) {
+        } else  if(moderator.getModerator().getUsername().equals(owner.getModerator().getUsername())) {
             if(moderators.size()>1) {
                 moderators.remove(moderator);
                 groupMembers.add(moderator.getModerator());
