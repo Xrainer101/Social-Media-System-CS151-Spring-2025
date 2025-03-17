@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Group  {
-    private boolean searchable = true;
+    private boolean searchable;
     private String name;
     private Moderator owner;
     private ArrayList<Consumer> groupMembers = new ArrayList<Consumer>();
@@ -67,12 +67,14 @@ public class Group  {
                 isMod = true;
             }
         }
-        if (!joinRequests.contains(current) && !groupMembers.contains(current)) {
+        if (!joinRequests.contains(current) && !groupMembers.contains(current) && !searchable) {
             joinRequests.add(current);
-        } else if (joinRequests.contains(current)) {
+        } else if (joinRequests.contains(current) && !searchable) {
             System.out.println("You already sent a request to join.");
         } else if (groupMembers.contains(current) || isMod) {
             System.out.println("You are already in the group.");
+        } else if (searchable && !groupMembers.contains(current) && !isMod) {
+            addMember(current);
         }
     }
 
@@ -113,7 +115,7 @@ public class Group  {
     }
 
     public void removeMember(Consumer consumer) {
-        removeMember(consumer);
+        groupMembers.remove(consumer);
         System.out.println(consumer.getUsername() + " is removed from the group.");
     }
 
@@ -153,6 +155,24 @@ public class Group  {
             groupMembers.add(moderator.getModerator());
             System.out.println(moderator.getModerator().getUsername() + " is now a regular member.");
             moderators.remove(moderator);
+    }
+
+    public void leaveGroup(Consumer current) {
+        if (owner.equals(current)) {
+            if(moderators.size()>1) {
+                moderators.remove(current);
+                owner = moderators.get(0);
+                System.out.println("You have left the group, ownership is passed to " + moderators.get(0));
+            } else if(moderators.size()<=1) {
+                System.out.println("There are no moderators to pass ownership to.");
+            }
+        } else if (moderators.contains(current)) {
+            moderators.remove(current);
+            System.out.println("You have left the group.");
+        } else if (groupMembers.contains(current)) {
+            groupMembers.remove(current);
+            System.out.println("You have left the group.");
+        }
     }
 
 }

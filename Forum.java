@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Forum {
-    public static ArrayList<Consumer> Users = new ArrayList<Consumer>();
+    static ArrayList<Consumer> Users = new ArrayList<Consumer>();
     private static ArrayList<Group> groups = new ArrayList<Group>();
     private static Consumer current = null;
     static boolean home = true;
@@ -83,7 +83,7 @@ public class Forum {
           String input = s.nextLine();
          if(input.equals("vg")) {
             System.out.println("There are " + groups.size() + " groups.");
-            System.out.println("Searchable Groups: ");
+            System.out.println("Public Groups: ");
             for (Group g: groups) {
                 if (g.getSearchable()) {
                     System.out.println(g.getGroupName());
@@ -109,14 +109,19 @@ public class Forum {
                 }
                 if (validGroup) {
                     viewedGroup.metrics();
-                for (Moderator m : viewedGroup.getModerators()) {
-                    if (m.getModerator().equals(current) && !viewedGroup.getGroupMembers().contains(current)) {
+                    boolean owner = false;
+                    for (int i = 0; i < viewedGroup.getModerators().size(); i++) {
+                        if (current.equals(viewedGroup.getOwner().getModerator())) {
+                            owner = true;
+                    }//for (Moderator mn : viewedGroup.getModerators()) {
+                    if (owner) {
                         if (viewedGroup.getOwner().getModerator().equals(current)) {
                             System.out.println("You are the owner of this group.");
                             System.out.println("d: demote moderator");
                         } else {
                             System.out.println("You are a moderator of the group.");
                         }
+                        System.out.println("l: leave group");
                         System.out.println("i: invite");
                         System.out.println("c: change group name");
                         System.out.println("r: remove member");
@@ -135,11 +140,23 @@ public class Forum {
                             if (notAModerator) {
                                 System.out.println("Cannot demote a regular user.");
                             } else if (!notAModerator) {
-                                for (Moderator mo: viewedGroup.getModerators()) {
+                               /* for (Moderator mo: viewedGroup.getModerators()) {
                                    if (mo.getModerator().getUsername().equalsIgnoreCase(input)) {
                                        viewedGroup.demoteModerator(mo);
                                    }
+                                } */
+                                for(int j = 0; i < viewedGroup.getModerators().size(); i++) {
+                                    if (viewedGroup.getModerators().get(i).getModerator().getUsername().equalsIgnoreCase(input)) {
+                                        viewedGroup.demoteModerator(viewedGroup.getModerators().get(i));
+                                    }
                                 }
+                            }
+                        } else if (input.equalsIgnoreCase("l")) {
+                            System.out.println("y or n: Are you sure you want to leave the group?");
+                            if(input.equalsIgnoreCase("y")) {
+                                viewedGroup.leaveGroup(current);
+                            } else {
+                                System.out.println("You are still a member of the group.");
                             }
                         } else if (input.equalsIgnoreCase("i")) {
                             System.out.println("Input the username of who you would like to invite: ");
@@ -172,7 +189,17 @@ public class Forum {
                             }
                         } else if (input.equalsIgnoreCase("r")) {
                             System.out.println("Enter the name of the person you wish to remove: ");
-
+                            input = s.nextLine();
+                            boolean removedUser = false;
+                            for(Consumer c: viewedGroup.getGroupMembers()) {
+                                if (c.getUsername().equalsIgnoreCase(input)) {
+                                    viewedGroup.removeMember(c);
+                                    removedUser = true;
+                                }
+                            }
+                            if (!removedUser) {
+                                System.out.println("Unable to remove user, either not in group or they are a moderator.");
+                            }
                         } else if (input.equalsIgnoreCase("a")) {
                             System.out.print("Join Requests: ");
                             for (Consumer c : viewedGroup.getJoinRequests()) {
@@ -188,14 +215,32 @@ public class Forum {
                         } else if (input.equalsIgnoreCase("m")) {
                             System.out.println("Enter the name of the member you wish to make moderator: ");
                             input = s.nextLine();
-                            for (Consumer c : viewedGroup.getGroupMembers()) {
-                                if (input.equalsIgnoreCase(c.getUsername())) {
-                                    viewedGroup.makeModerator(c);
+                            for (int j = 0; j < viewedGroup.getGroupMembers().size(); j++) { // Consumer c : viewedGroup.getGroupMembers())
+                                if (viewedGroup.getGroupMembers().get(i).getUsername().equalsIgnoreCase(input)) {
+                                    viewedGroup.makeModerator(viewedGroup.getGroupMembers().get(i));
                                 }
                             }
                         }
                     } else if (viewedGroup.getGroupMembers().contains(current)) {
                         System.out.println("You are a member of the group.");
+                        System.out.println("l: leave group");
+                        input = s.nextLine();
+                        if (input.equalsIgnoreCase("l")) {
+                            System.out.println("y or n: Are you sure you want to leave the group?");
+                            input = s.nextLine();
+                            if(input.equalsIgnoreCase("y")) {
+                                viewedGroup.leaveGroup(current);
+                            } else {
+                                System.out.println("You are still a member of the group.");
+                            }
+                        }
+                    } else if (!viewedGroup.getGroupMembers().contains(current) && !viewedGroup.getModerators().contains(current)) {
+                        System.out.println("You are not a member of the group.");
+                        System.out.println("j: join group");
+                        input = s.nextLine();
+                        if (input.equalsIgnoreCase("j")) {
+                            viewedGroup.requestJoin(current);
+                        }
                     }
                 }
             } else {
