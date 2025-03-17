@@ -4,14 +4,18 @@ public class Group  {
     private boolean searchable;
     private String name;
     private Moderator owner;
-    private ArrayList<Consumer> groupMembers = new ArrayList<Consumer>();
-    private ArrayList<Moderator> moderators = new ArrayList<Moderator>();
-    private ArrayList<Consumer> joinRequests = new ArrayList<Consumer>();
-    private ArrayList<Consumer> invited = new ArrayList<Consumer>();
+    private ArrayList<Consumer> groupMembers;
+    private ArrayList<Moderator> moderators;
+    private ArrayList<Consumer> joinRequests;
+    private ArrayList<Consumer> invited;
 
     public Group(String name, Moderator owner) {
         this.name = name;
         this.owner = owner;
+        groupMembers = new ArrayList<Consumer>();
+        moderators = new ArrayList<Moderator>();
+        joinRequests = new ArrayList<Consumer>();
+        invited = new ArrayList<Consumer>();
     }
     public String getGroupName() {
         return name;
@@ -126,15 +130,15 @@ public class Group  {
             System.out.println("No moderators");
         } else {
             for (Moderator m : moderators) {
-                System.out.println(m.getModerator().getUsername());
+                System.out.println("   " + m.getModerator().getUsername());
             }
         }
-        System.out.println("\nMembers: ");
+        System.out.println("Members: ");
         if (groupMembers.isEmpty()) {
             System.out.println("No members");
         } else {
             for (Consumer c : groupMembers) {
-                System.out.println(c.getUsername());
+                System.out.println("   " + c.getUsername());
             }
         }
     }
