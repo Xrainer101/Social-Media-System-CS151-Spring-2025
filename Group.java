@@ -121,15 +121,14 @@ public class Group  {
 
     public void metrics() {
         System.out.println("Viewing: " + getGroupName());
-        System.out.print("Moderators: ");
+        System.out.println("Moderators: ");
         for (Moderator m: moderators) {
-            System.out.print(m.getModerator().getUsername() + " ");
+            System.out.println(m.getModerator().getUsername());
         }
-        System.out.print("\nMembers: ");
+        System.out.println("Members: ");
         for (Consumer c: groupMembers) {
-            System.out.print(c.getUsername() + " ");
+            System.out.println(c.getUsername());
         }
-        System.out.println();
     }
 
     public void makeModerator(Consumer consumer) {
@@ -152,9 +151,20 @@ public class Group  {
     }
 
     public void demoteModerator(Moderator moderator) {
+        if(!moderator.equals(owner)) {
             groupMembers.add(moderator.getModerator());
             System.out.println(moderator.getModerator().getUsername() + " is now a regular member.");
             moderators.remove(moderator);
+        } else if (moderator.equals(owner)) {
+            if(moderators.size()>1) {
+                moderators.remove(moderator);
+                groupMembers.add(moderator.getModerator());
+                owner = moderators.get(0);
+                System.out.println("You have left the group, ownership is passed to " + moderators.get(0));
+            } else if (moderators.size() <= 1) {
+                System.out.println("You cannot demote yourself as the owner if there are no other moderators.");
+            }
+        }
     }
 
     public void leaveGroup(Consumer current) {
@@ -163,7 +173,7 @@ public class Group  {
                 moderators.remove(current);
                 owner = moderators.get(0);
                 System.out.println("You have left the group, ownership is passed to " + moderators.get(0));
-            } else if(moderators.size()<=1) {
+            } else if (moderators.size() <= 1) {
                 System.out.println("There are no moderators to pass ownership to.");
             }
         } else if (moderators.contains(current)) {
