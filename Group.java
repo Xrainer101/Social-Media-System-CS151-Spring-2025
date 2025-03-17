@@ -1,17 +1,28 @@
 import java.util.ArrayList;
 
 public class Group  {
-    private boolean searchable = true;
+    private boolean searchable;
     private String name;
-    private ArrayList<Consumer> groupMembers = new ArrayList<Consumer>();
-    private ArrayList<Moderator> moderators = new ArrayList<Moderator>();
-    private ArrayList<Consumer> joinRequests = new ArrayList<Consumer>();
+    private Moderator owner;
+    private ArrayList<Consumer> groupMembers;
+    private ArrayList<Moderator> moderators;
+    private ArrayList<Consumer> joinRequests;
+    private ArrayList<Consumer> invited;
 
-    public Group(String name) {
+    public Group(String name, Moderator owner) {
         this.name = name;
+        this.owner = owner;
+        groupMembers = new ArrayList<Consumer>();
+        moderators = new ArrayList<Moderator>();
+        joinRequests = new ArrayList<Consumer>();
+        invited = new ArrayList<Consumer>();
     }
     public String getGroupName() {
         return name;
+    }
+
+    public Moderator getOwner() {
+        return owner;
     }
 
     public ArrayList<Consumer> getJoinRequests() {
@@ -34,6 +45,10 @@ public class Group  {
         this.searchable = searchable;
     }
 
+    public void setOwner(Moderator owner) {
+        this.owner = owner;
+    }
+
     public void changeGroupName(String name, Consumer current) {
         boolean nameChanged = false;
         for(Moderator moderator: moderators) {
@@ -50,17 +65,58 @@ public class Group  {
     }
 
     public void requestJoin(Consumer current) {
-        if (!joinRequests.contains(current) && !groupMembers.contains(current)) {
+        boolean isMod = false;
+        for(Moderator m: moderators) {
+            if(m.getModerator().equals(current)) {
+                isMod = true;
+            }
+        }
+        if (!joinRequests.contains(current) && !groupMembers.contains(current) && !searchable) {
             joinRequests.add(current);
-        } else if (joinRequests.contains(current)) {
+        } else if (joinRequests.contains(current) && !searchable) {
             System.out.println("You already sent a request to join.");
-        } else if (groupMembers.contains(current)) {
+        } else if (groupMembers.contains(current) || isMod) {
             System.out.println("You are already in the group.");
+        } else if (searchable && !groupMembers.contains(current) && !isMod) {
+            addMember(current);
         }
     }
 
-    public void joinRequestList() {
+    public void acceptJoinRequest(Consumer consumer) {
+            joinRequests.remove(consumer);
+            groupMembers.add(consumer);
+            System.out.println(consumer.getUsername() + " is accepted into the group.");
+    }
 
+    public void sendInvite(Consumer consumer) {
+        boolean alreadyInvited = false;
+        for (Consumer c : groupMembers) {
+            if (c.equals(consumer)) {
+                alreadyInvited = true;
+            }
+        }
+        for (Moderator m : moderators) {
+            if (m.getModerator().equals(consumer)) {
+                alreadyInvited = true;
+            }
+        }
+        for (Consumer c : invited) {
+            if (c.equals(consumer)) {
+                alreadyInvited = true;
+            }
+        }
+        if (alreadyInvited) {
+            System.out.println("User is ineligible for an invite.");
+        } else {
+            System.out.println("Sent a group invite to: " + consumer.getUsername());
+            invited.add(consumer);
+        }
+    }
+
+    public void acceptedInvite(Consumer consumer) {
+        invited.remove(consumer);
+        groupMembers.add(consumer);
+        System.out.println(consumer.getUsername() + " has accepted the group invite");
     }
 
     public void addMember(Consumer consumer) {
@@ -68,15 +124,106 @@ public class Group  {
         System.out.println(consumer.getUsername() + " is added to the group.");
     }
 
+    public void removeMember(Consumer consumer) {
+        groupMembers.remove(consumer);
+        System.out.println(consumer.getUsername() + " is removed from the group.");
+    }
+
+    public void metrics() {
+        System.out.println("Viewing: " + getGroupName());
+        System.out.println("Moderators: ");
+        if (moderators.isEmpty()) {
+            System.out.println("   No moderators");
+        } else {
+            for (Moderator m : moderators) {
+                System.out.println("   " + m.getModerator().getUsername());
+            }
+        }
+        System.out.println("Members: ");
+        if (groupMembers.isEmpty()) {
+            System.out.println("   No members");
+        } else {
+            for (Consumer c : groupMembers) {
+                System.out.println("   " + c.getUsername());
+            }
+        }
+    }
+
+    public void makeOwner(Moderator moderator) {
+        boolean isOwner = false;
+        if (owner.getModerator().getUsername().equals(moderator.getModerator().getUsername())) {
+                isOwner = true;
+        }
+        if (isOwner) {
+            System.out.println("You are already the owner.");
+        } else if (!moderators.contains(moderator)) {
+            System.out.println("Moderator does not exist");
+        } else {
+            owner = moderator;
+            System.out.println(moderator.getModerator().getUsername() + " is the new owner of the group.");
+        }
+    }
+
     public void makeModerator(Consumer consumer) {
-        if(!groupMembers.contains(consumer)) {
+        boolean isModerator = false;
+        for(Moderator m: moderators) {
+            if (m.getModerator().equals(consumer)) {
+                isModerator = true;
+            }
+        }
+        if (isModerator) {
+            System.out.println(consumer.getUsername() + " is already a moderator.");
+        } else if (!groupMembers.contains(consumer)) {
             System.out.println("Group member does not exist.");
         } else {
             Moderator newModerator = new Moderator(consumer);
+            groupMembers.remove(consumer);
             moderators.add(newModerator);
             System.out.println(consumer.getUsername() + " is now a moderator.");
         }
     }
 
+    public void demoteModerator(Moderator moderator) {
+        if(!moderator.getModerator().getUsername().equals(owner.getModerator().getUsername())) {
+            groupMembers.add(moderator.getModerator());
+            System.out.println(moderator.getModerator().getUsername() + " is now a regular member.");
+            moderators.remove(moderator);
+        } else  if(moderator.getModerator().getUsername().equals(owner.getModerator().getUsername())) {
+            if(moderators.size()>1) {
+                moderators.remove(moderator);
+                groupMembers.add(moderator.getModerator());
+                owner = moderators.get(0);
+                System.out.println("You have left the group, ownership is passed to " + moderators.get(0));
+            } else if (moderators.size() <= 1) {
+                System.out.println("You cannot demote yourself as the owner if there are no other moderators.");
+            }
+        }
+    }
+
+    public void leaveGroup(Consumer current) {
+        boolean isModerator = false;
+        Moderator temp = null;
+        for (Moderator m: moderators) {
+            if (m.getModerator().equals(current)) {
+                temp = m;
+                isModerator = true;
+            }
+        }
+        if (owner.getModerator().equals(current)) {
+            if(moderators.size()>1) {
+                moderators.remove(temp);
+                owner = moderators.get(0);
+                System.out.println("You have left the group, ownership is passed to " + moderators.get(0).getModerator().getUsername());
+            } else if (moderators.size() == 1) {
+                System.out.println("There are no moderators to pass ownership to.");
+            }
+        } else if (isModerator && !owner.getModerator().equals(current)) {
+            moderators.remove(temp);
+            System.out.println("You have left the group.");
+        } else if (groupMembers.contains(current)) {
+            groupMembers.remove(current);
+            System.out.println("You have left the group.");
+        }
+    }
 
 }
