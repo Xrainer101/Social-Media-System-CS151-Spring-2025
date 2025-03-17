@@ -113,6 +113,12 @@ public class Group  {
         }
     }
 
+    public void acceptedInvite(Consumer consumer) {
+        invited.remove(consumer);
+        groupMembers.add(consumer);
+        System.out.println(consumer.getUsername() + " has accepted the group invite");
+    }
+
     public void addMember(Consumer consumer) {
         groupMembers.add(consumer);
         System.out.println(consumer.getUsername() + " is added to the group.");
@@ -127,7 +133,7 @@ public class Group  {
         System.out.println("Viewing: " + getGroupName());
         System.out.println("Moderators: ");
         if (moderators.isEmpty()) {
-            System.out.println("No moderators");
+            System.out.println("   No moderators");
         } else {
             for (Moderator m : moderators) {
                 System.out.println("   " + m.getModerator().getUsername());
@@ -135,11 +141,26 @@ public class Group  {
         }
         System.out.println("Members: ");
         if (groupMembers.isEmpty()) {
-            System.out.println("No members");
+            System.out.println("   No members");
         } else {
             for (Consumer c : groupMembers) {
                 System.out.println("   " + c.getUsername());
             }
+        }
+    }
+
+    public void makeOwner(Moderator moderator) {
+        boolean isOwner = false;
+        if (owner.getModerator().getUsername().equals(moderator.getModerator().getUsername())) {
+                isOwner = true;
+        }
+        if (isOwner) {
+            System.out.println("You are already the owner.");
+        } else if (!moderators.contains(moderator)) {
+            System.out.println("Moderator does not exist");
+        } else {
+            owner = moderator;
+            System.out.println(moderator.getModerator().getUsername() + " is the new owner of the group.");
         }
     }
 
@@ -152,7 +173,7 @@ public class Group  {
         }
         if (isModerator) {
             System.out.println(consumer.getUsername() + " is already a moderator.");
-        } else if(!groupMembers.contains(consumer)) {
+        } else if (!groupMembers.contains(consumer)) {
             System.out.println("Group member does not exist.");
         } else {
             Moderator newModerator = new Moderator(consumer);
@@ -180,16 +201,24 @@ public class Group  {
     }
 
     public void leaveGroup(Consumer current) {
-        if (owner.equals(current)) {
+        boolean isModerator = false;
+        Moderator temp = null;
+        for (Moderator m: moderators) {
+            if (m.getModerator().equals(current)) {
+                temp = m;
+                isModerator = true;
+            }
+        }
+        if (owner.getModerator().equals(current)) {
             if(moderators.size()>1) {
-                moderators.remove(current);
+                moderators.remove(temp);
                 owner = moderators.get(0);
-                System.out.println("You have left the group, ownership is passed to " + moderators.get(0));
-            } else if (moderators.size() <= 1) {
+                System.out.println("You have left the group, ownership is passed to " + moderators.get(0).getModerator().getUsername());
+            } else if (moderators.size() == 1) {
                 System.out.println("There are no moderators to pass ownership to.");
             }
-        } else if (moderators.contains(current)) {
-            moderators.remove(current);
+        } else if (isModerator && !owner.getModerator().equals(current)) {
+            moderators.remove(temp);
             System.out.println("You have left the group.");
         } else if (groupMembers.contains(current)) {
             groupMembers.remove(current);
