@@ -1,5 +1,5 @@
 public interface Inviting {
-    public static final int maxUsers = 50;
+    int maxUsers = 50;
 
-    public abstract void inviteUser();
+    void inviteUser();
 }
