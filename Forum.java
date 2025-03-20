@@ -6,6 +6,13 @@ public class Forum {
     static boolean home = true;
    public static void main(String[] args) {
        Scanner s = new Scanner(System.in);
+       //Dummy data -> login with one of these accounts already.
+       Consumer user1 = new Consumer("Sza", "1234");
+       Consumer user2 = new Consumer("Matt", "1234");
+       Users.add(user1);
+       Users.add(user2);
+       user1.addFriend(user2);
+       user2.addFriend(user1);
        while(true) {
          if(home) {
            setup(s);
@@ -73,6 +80,7 @@ public class Forum {
          System.out.println("vp: viewPosts");
          System.out.println("vf: viewFriend");
          System.out.println("af: add friend");
+         System.out.println("pm: private messaging");
          System.out.println("lo: logout");
          System.out.println("EXIT: exits program(loses all data)");
          System.out.println("Enter input(2 character): ");
@@ -124,6 +132,9 @@ public class Forum {
                System.out.println("Friend does not exist or you are trying add yourself as a friend");
             }
 
+         }
+         else if(input.equals("pm")) {
+            current.getMessages().UI(s);
          }
           
        }

@@ -5,11 +5,13 @@ public class Consumer {
    private String password;
    private ArrayList<Consumer> friends;
    private ArrayList<Post> posts;
+   private Messages messages;
    public Consumer(String username, String password) {
       this.username = username;
       this.password = password;
       friends = new ArrayList<Consumer>();
       posts = new ArrayList<Post>();
+      messages = new Messages(this);
    }
    public String getUsername() {
     return username;
@@ -17,7 +19,10 @@ public class Consumer {
    public String getPassword() {
     return password;
    }
-
+   
+   public Messages getMessages() {
+       return messages;
+   }
    public void addFriend(Consumer other) {
       this.friends.add(other);
    }
@@ -86,4 +91,14 @@ public class Consumer {
       return null;
    }
    
+   public ArrayList<String> getFriendsUsernames () {
+
+      ArrayList<String> fUsernames = new ArrayList<String>();
+      for(Consumer f: friends) {
+         fUsernames.add(f.username);
+      }
+      return fUsernames;
+
+   }
+
 }
