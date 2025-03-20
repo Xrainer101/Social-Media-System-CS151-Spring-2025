@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class Group implements Inviting, Manageable {
     private boolean searchable;
     private String name;
+    private String description;
     private Moderator owner;
     private ArrayList<Consumer> groupMembers;
     private ArrayList<Moderator> moderators;
@@ -13,6 +14,7 @@ public class Group implements Inviting, Manageable {
     public Group(String name, Moderator owner) {
         this.name = name;
         this.owner = owner;
+        this.description = "";
         groupMembers = new ArrayList<Consumer>();
         moderators = new ArrayList<Moderator>();
         joinRequests = new ArrayList<Consumer>();
@@ -38,12 +40,20 @@ public class Group implements Inviting, Manageable {
         return moderators;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public boolean getSearchable() {
         return searchable;
     }
 
     public void isSearchable(boolean searchable) {
         this.searchable = searchable;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void changeGroupName(String name, Consumer current) {
@@ -119,7 +129,8 @@ public class Group implements Inviting, Manageable {
 
     @Override
     public void metrics() {
-        System.out.println("Viewing: " + getGroupName());
+        System.out.println("Viewing: \n   " + getGroupName());
+        System.out.println("Description: \n   " + description);
         System.out.println("Moderators: ");
         if (moderators.isEmpty()) {
             System.out.println("   No moderators");
@@ -155,15 +166,41 @@ public class Group implements Inviting, Manageable {
             } else if (choice.equalsIgnoreCase("n")) {
                 searchable = false;
                 System.out.println("Group is private/kept private.");
+            } else {
+                System.out.println("Invalid input, returning to previous menu.");
             }
         } else if (choice.equalsIgnoreCase("n")) {
             System.out.println("Returning to previous menu, settings are not altered.");
+        } else {
+            System.out.println("Invalid input, returning to previous menu.");
         }
     }
 
     @Override
     public void clear() {
-
+        System.out.println("Would you like to clear the group description?");
+        System.out.println("y or n");
+        Scanner sc = new Scanner(System.in);
+        String choice = sc.nextLine();
+        if (choice.equalsIgnoreCase("y")) {
+            description = "";
+            System.out.println("Group description is cleared, would you like to add a new one?");
+            System.out.println("y or n");
+            choice = sc.nextLine();
+            if (choice.equalsIgnoreCase("y")) {
+                System.out.println("New description: ");
+                choice = sc.nextLine();
+                description = choice;
+            } else if (choice.equalsIgnoreCase("n")) {
+                System.out.println("Returning to previous menu, group description is left blank.");
+            } else {
+                System.out.println("Invalid input, returning to previous menu.");
+            }
+        } else if (choice.equalsIgnoreCase("n")) {
+            System.out.println("Returning to previous menu, group description is not altered.");
+        } else {
+            System.out.println("Invalid input, returning to previous menu.");
+        }
     }
 
     public void acceptedInvite(Consumer consumer) {

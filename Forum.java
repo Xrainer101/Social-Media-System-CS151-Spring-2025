@@ -134,6 +134,7 @@ public class Forum {
                                 System.out.println("You are a moderator in this group.");
                             }
                             System.out.println("c: change group settings");
+                            System.out.println("g: clear/modify group description");
                             System.out.println("i: invite");
                             System.out.println("a: accept join requests");
                             System.out.println("r: remove member");
@@ -225,6 +226,8 @@ public class Forum {
                                         viewedGroup.acceptJoinRequest(c);
                                     }
                                 }
+                            } else if (input.equalsIgnoreCase("g")) {
+                                viewedGroup.clear();
                             } else if (input.equalsIgnoreCase("m")) {
                                 System.out.println("Enter the name of the member you wish to make moderator: ");
                                 input = s.nextLine();
@@ -312,6 +315,9 @@ public class Forum {
                 if (!groupExists) {
                     groups.add(new Group(groupName, new Moderator(current)));
                     System.out.println("New group \"" + groupName + "\" has been created.");
+                    System.out.println("Enter a description for the group, can also leave it blank: ");
+                    input = s.nextLine();
+                    String description = input;
                     System.out.println("Would you like it to be listed publicly in the group view?\ny or n");
                     input = s.nextLine();
                     if (input.equalsIgnoreCase("y")) {
@@ -320,6 +326,7 @@ public class Forum {
                                 g.isSearchable(true);
                                 g.addMember(current);
                                 g.makeModerator(current);
+                                g.setDescription(description);
                                 System.out.println("Group \"" + groupName + "\" will be listed.");
                             }
                         }
@@ -329,11 +336,20 @@ public class Forum {
                                 g.isSearchable(false);
                                 g.addMember(current);
                                 g.makeModerator(current);
+                                g.setDescription(description);
                                 System.out.println("Group " + groupName + " will not be listed.");
                             }
                         }
                     } else {
-                        System.out.println("Invalid Input");
+                        System.out.println("Invalid input, group will be defaulted to public.");
+                        for (Group g : groups) {
+                            if (g.getGroupName().equals(groupName)) {
+                                g.isSearchable(true);
+                                g.addMember(current);
+                                g.makeModerator(current);
+                                System.out.println("Group \"" + groupName + "\" will be listed.");
+                            }
+                        }
                     }
                 } else {
                   System.out.println("Cannot create group, one already exists with this name.");
