@@ -2,5 +2,5 @@ public interface Manageable {
     void changeSettings();
     void clear();
     void metrics();
-    void delete();
+    void delete(Consumer consumer);
 }

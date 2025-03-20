@@ -1,6 +1,7 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
-public class Group  {
+public class Group implements Inviting, Manageable {
     private boolean searchable;
     private String name;
     private Moderator owner;
@@ -45,10 +46,6 @@ public class Group  {
         this.searchable = searchable;
     }
 
-    public void setOwner(Moderator owner) {
-        this.owner = owner;
-    }
-
     public void changeGroupName(String name, Consumer current) {
         boolean nameChanged = false;
         for(Moderator moderator: moderators) {
@@ -88,7 +85,8 @@ public class Group  {
             System.out.println(consumer.getUsername() + " is accepted into the group.");
     }
 
-    public void sendInvite(Consumer consumer) {
+    @Override
+    public void inviteUser(Consumer consumer) {
         boolean alreadyInvited = false;
         for (Consumer c : groupMembers) {
             if (c.equals(consumer)) {
@@ -113,22 +111,13 @@ public class Group  {
         }
     }
 
-    public void acceptedInvite(Consumer consumer) {
-        invited.remove(consumer);
-        groupMembers.add(consumer);
-        System.out.println(consumer.getUsername() + " has accepted the group invite");
-    }
-
-    public void addMember(Consumer consumer) {
-        groupMembers.add(consumer);
-        System.out.println(consumer.getUsername() + " is added to the group.");
-    }
-
-    public void removeMember(Consumer consumer) {
+    @Override
+    public void delete(Consumer consumer) {
         groupMembers.remove(consumer);
         System.out.println(consumer.getUsername() + " is removed from the group.");
     }
 
+    @Override
     public void metrics() {
         System.out.println("Viewing: " + getGroupName());
         System.out.println("Moderators: ");
@@ -147,6 +136,45 @@ public class Group  {
                 System.out.println("   " + c.getUsername());
             }
         }
+    }
+
+    @Override
+    public void changeSettings() {
+        System.out.println("Would you like to change the privacy settings of the group?");
+        System.out.println("y or n");
+        Scanner sc = new Scanner(System.in);
+        String choice = sc.nextLine();
+        if (choice.equalsIgnoreCase("y")) {
+            System.out.println("Would you like to make the group public?");
+            System.out.println("y: publicly listed and can be joined without requesting an invite.");
+            System.out.println("n: not listed in public groups, join requests must also be accepted for users to enter.");
+            choice = sc.nextLine();
+            if (choice.equalsIgnoreCase("y")) {
+                searchable = true;
+                System.out.println("Group is public/kept public.");
+            } else if (choice.equalsIgnoreCase("n")) {
+                searchable = false;
+                System.out.println("Group is private/kept private.");
+            }
+        } else if (choice.equalsIgnoreCase("n")) {
+            System.out.println("Returning to previous menu, settings are not altered.");
+        }
+    }
+
+    @Override
+    public void clear() {
+
+    }
+
+    public void acceptedInvite(Consumer consumer) {
+        invited.remove(consumer);
+        groupMembers.add(consumer);
+        System.out.println(consumer.getUsername() + " has accepted the group invite");
+    }
+
+    public void addMember(Consumer consumer) {
+        groupMembers.add(consumer);
+        System.out.println(consumer.getUsername() + " is added to the group.");
     }
 
     public void makeOwner(Moderator moderator) {

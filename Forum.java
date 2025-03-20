@@ -133,7 +133,7 @@ public class Forum {
                                 viewedGroup.metrics();
                                 System.out.println("You are a moderator in this group.");
                             }
-                            System.out.println("c: change group name");
+                            System.out.println("c: change group settings");
                             System.out.println("i: invite");
                             System.out.println("a: accept join requests");
                             System.out.println("r: remove member");
@@ -150,7 +150,7 @@ public class Forum {
                                     }
                                 }
                                 if (notAModerator) {
-                                    System.out.println("Cannot demote a regular user.");
+                                    System.out.println("Cannot demote a regular user, or this user does not exist.");
                                 } else if (!notAModerator) {
                                     for (int j = 0; j < viewedGroup.getModerators().size(); j++) {
                                         if (viewedGroup.getModerators().get(j).getModerator().getUsername().equalsIgnoreCase(input)) {
@@ -173,7 +173,7 @@ public class Forum {
                                 for (Consumer c : Users) {
                                     if (c.getUsername().equalsIgnoreCase(input)) {
                                         foundUser = true;
-                                        viewedGroup.sendInvite(c);
+                                        viewedGroup.inviteUser(c);
                                         c.addGroupInvite(viewedGroup);
                                     }
                                 }
@@ -196,6 +196,7 @@ public class Forum {
                                 } else {
                                     viewedGroup.changeGroupName(input, current);
                                 }
+                                viewedGroup.changeSettings();
                             } else if (input.equalsIgnoreCase("r")) {
                                 System.out.println("Enter the name of the person you wish to remove: ");
                                 input = s.nextLine();
@@ -210,7 +211,7 @@ public class Forum {
                                 if (!removedUser) {
                                     System.out.println("Unable to remove user, either not in group or they are a moderator.");
                                 } else if (removedUser) {
-                                    viewedGroup.removeMember(match);
+                                    viewedGroup.delete(match);
                                 }
                             } else if (input.equalsIgnoreCase("a")) {
                                 System.out.print("Join Requests: ");
@@ -255,12 +256,11 @@ public class Forum {
                                                 found = m;
                                             }
                                             if (found == null) {
+                                                System.out.println("Inputted user is not a moderator or does not exist.");
                                             } else {
                                                 viewedGroup.makeOwner(found);
                                             }
                                         }
-                                        } else if (regularUser) {
-                                            System.out.println("Inputted user is not a moderator or does not exist.");
                                         }
                                 }
                             }
