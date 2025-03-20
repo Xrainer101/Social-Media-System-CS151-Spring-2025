@@ -4,6 +4,7 @@ public class Forum {
     static ArrayList<Consumer> Users = new ArrayList<Consumer>();
     private static ArrayList<Group> groups = new ArrayList<Group>();
     private static Consumer current = null;
+    private static ArrayList<Moderator> globalModerator = new ArrayList<Moderator>();
     static boolean home = true;
    public static void main(String[] args) {
        Scanner s = new Scanner(System.in);
