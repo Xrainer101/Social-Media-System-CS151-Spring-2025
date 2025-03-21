@@ -143,9 +143,12 @@ public class Consumer {
                    currentModerator.deletePost(posts, ind);
                 } else {
                    System.out.println("Invalid index/input, going back to posts menu.");
+
+                    
                 }
              } else {
                 System.out.println("Returning back to main menu, no posts have been deleted.");
+                done = true;
              }
        } else {
           done = true;
