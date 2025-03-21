@@ -107,22 +107,45 @@ public class Forum {
               System.out.println();
               } else if (input.equals("vp")) {
                   current.viewPosts(s, null);
-              } else if (input.equals("af")) {
-                  System.out.println("Enter Friend username: ");
-                  String username = s.nextLine();
-                  Consumer result = null;
-                  for (Consumer U : Users) {
-                      if (U.getUsername().equals(username) && U != current) {
-                          result = U;
-                      }
+              } else if(input.equals("af")) {
+               System.out.println("Enter Friend username: ");
+               String username = s.nextLine();
+               Consumer result = null;
+               for(Consumer U : Users) {
+                  if (U.getUsername().equals(username) && U != current) {
+                       result = U;
                   }
-                  if (result != null) {
-                      result.addFriend(current);
-                      current.addFriend(result);
-                      System.out.println("Added successfully");
-                  } else {
-                      System.out.println("Not added!");
+               }
+               if(result != null && current.checkFriend(result.getUsername()) == null) {
+                  if(current.checkRequests(result)) {
+                     System.out.println("This friend sent a request!");
+                     System.out.println("Accept request from " + result.getUsername() + "(y/n)");
+                     String choice = s.nextLine();
+                     if(choice.equals("y")) {
+                        result.addFriend(current);
+                        current.addFriend(result);
+                        System.out.println("Added successfully");
+                        System.out.println();
+                     }
+                     else {
+                        System.out.println("Not added");
+                        System.out.println();
+                     }
+   
                   }
+                  else {
+                     if(result.checkRequests(current)) {
+                        System.out.println("Pending request");
+                        System.out.println("Waiting on friend");
+                     }
+                     else {
+                     System.out.println("Sending friend Request");
+                     System.out.println();
+                     result.addRequest(current);
+                     }
+   
+                  }
+               }
               } else if (input.equals("vf")) {
                   System.out.println("Enter Friend username to view their posts: ");
                   String username = s.nextLine();
