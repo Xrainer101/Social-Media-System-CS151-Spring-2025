@@ -42,11 +42,25 @@ public class Forum {
             String username = s.nextLine();
             System.out.println("Enter password: ");
             String password = s.nextLine();
+            boolean exist = false;
+            for(Consumer U: Users) {
+               if(U.getUsername().equals(username)) {
+                  exist = true;
+                  break;
+               }
+            }
+            if(!exist) {
             Users.add(new Consumer(username, password));
             System.out.println();
             System.out.println("Signup successful");
             System.out.println();
             System.out.println();
+            }
+            else {
+               System.out.println("This username is already in use!");
+               System.out.println("try again!");
+               System.out.println();
+            }
         }
         else if(input.equals("L")) {
             System.out.println("Enter username: ");
@@ -145,6 +159,10 @@ public class Forum {
                      }
    
                   }
+               }
+               else {
+                  System.out.println("Not added because user does not exist, already added, or trying to add yourself");
+                  System.out.println();
                }
               } else if (input.equals("vf")) {
                   System.out.println("Enter Friend username to view their posts: ");

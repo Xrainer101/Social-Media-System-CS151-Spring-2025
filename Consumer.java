@@ -4,6 +4,7 @@ public class Consumer {
    private String username;
    private String password;
    private ArrayList<Consumer> friends;
+   private ArrayList<String> friendRequests;
    private ArrayList<Post> posts;
    private Messages messages;
    private ArrayList<Group> groupInvites;
@@ -16,6 +17,7 @@ public class Consumer {
       groupInvites = new ArrayList<Group>();
       groups = new ArrayList<Group>();
       friends = new ArrayList<Consumer>();
+      friendRequests = new ArrayList<String>();
       posts = new ArrayList<Post>();
       messages = new Messages(this);
       isGlobalModerator = false;
@@ -119,7 +121,7 @@ public class Consumer {
              valid = true;
              }
              else {
-               System.out.println("This friend has no posts to display");
+               System.out.println("This user has no posts to display");
                System.out.println("Going back");
                System.out.println();
                valid = true;
@@ -170,7 +172,13 @@ public class Consumer {
       }
       return null;
    }
-
+   public boolean checkRequests(Consumer r) {
+         return friendRequests.contains(r.username);
+   }
+   public void addRequest(Consumer c) {
+      friendRequests.add(c.username);
+        
+   }
    public ArrayList<String> getFriendsUsernames () {
 
       ArrayList<String> fUsernames = new ArrayList<String>();
