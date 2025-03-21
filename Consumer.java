@@ -4,12 +4,14 @@ public class Consumer {
    private String username;
    private String password;
    private ArrayList<Consumer> friends;
+   private ArrayList<String> friendRequests;
    private ArrayList<Post> posts;
    private Messages messages;
    public Consumer(String username, String password) {
       this.username = username;
       this.password = password;
       friends = new ArrayList<Consumer>();
+      friendRequests = new ArrayList<String>();
       posts = new ArrayList<Post>();
       messages = new Messages(this);
    }
@@ -19,6 +21,7 @@ public class Consumer {
    public String getPassword() {
     return password;
    }
+   
    
    public Messages getMessages() {
        return messages;
@@ -90,7 +93,13 @@ public class Consumer {
       }
       return null;
    }
-   
+   public boolean checkRequests(Consumer r) {
+         return friendRequests.contains(r.username);
+   }
+   public void addRequest(Consumer c) {
+      friendRequests.add(c.username);
+        
+   }
    public ArrayList<String> getFriendsUsernames () {
 
       ArrayList<String> fUsernames = new ArrayList<String>();

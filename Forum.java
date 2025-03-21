@@ -38,11 +38,25 @@ public class Forum {
             String username = s.nextLine();
             System.out.println("Enter password: ");
             String password = s.nextLine();
+            boolean exist = false;
+            for(Consumer U: Users) {
+               if(U.getUsername().equals(username)) {
+                  exist = true;
+                  break;
+               }
+            }
+            if(!exist) {
             Users.add(new Consumer(username, password));
             System.out.println();
             System.out.println("Signup successful");
             System.out.println();
             System.out.println();
+            }
+            else {
+               System.out.println("This username is already in use!");
+               System.out.println("try again!");
+               System.out.println();
+            }
         }
         else if(input.equals("L")) {
             System.out.println("Enter username: ");
@@ -112,13 +126,39 @@ public class Forum {
                     result = U;
                }
             }
-            if(result != null) {
-               result.addFriend(current);
-               current.addFriend(result);
-               System.out.println("Added successfully");
+            if(result != null && current.checkFriend(result.getUsername()) == null) {
+               if(current.checkRequests(result)) {
+                  System.out.println("This friend sent a request!");
+                  System.out.println("Accept request from " + result.getUsername() + "(y/n)");
+                  String choice = s.nextLine();
+                  if(choice.equals("y")) {
+                     result.addFriend(current);
+                     current.addFriend(result);
+                     System.out.println("Added successfully");
+                     System.out.println();
+                  }
+                  else {
+                     System.out.println("Not added");
+                     System.out.println();
+                  }
+
+               }
+               else {
+                  if(result.checkRequests(current)) {
+                     System.out.println("Pending request");
+                     System.out.println("Waiting on friend");
+                  }
+                  else {
+                  System.out.println("Sending friend Request");
+                  System.out.println();
+                  result.addRequest(current);
+                  }
+
+               }
             }
             else {
-               System.out.println("Not added!");
+               System.out.println("Not added! Already added, user does not exist, or trying to add yourself");
+               System.out.println();
             }
          }
          else if(input.equals("vf")) {
