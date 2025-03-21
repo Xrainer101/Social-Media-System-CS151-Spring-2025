@@ -59,7 +59,7 @@ public class Consumer {
              valid = true;
              }
              else {
-               System.out.println("This friend has no posts to display");
+               System.out.println("This user has no posts to display");
                System.out.println("Going back");
                System.out.println();
                valid = true;
