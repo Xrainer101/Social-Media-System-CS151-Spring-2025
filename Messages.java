@@ -7,7 +7,7 @@ public class Messages {
     private List<Message> SentMessages = new ArrayList<>();
     private List<Message> ReceivedMessages = new ArrayList<>();
     private static Scanner scanner;
- 
+
     public Messages(Consumer user) {
         this.user = user;
     }
@@ -28,7 +28,7 @@ public class Messages {
             System.out.println(recipient + " is not in your friends list. Add them first.");
             return;
         }
-       
+
         System.out.print("Enter your message: ");
         String message = scanner.nextLine();
         SentMessages.add(new Message(message, recipient));
