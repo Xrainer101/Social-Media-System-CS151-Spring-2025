@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-public class Consumer {
+public class Consumer extends User {
    private String username;
    private String password;
    private ArrayList<Group> groupInvites;
