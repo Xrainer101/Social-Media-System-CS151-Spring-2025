@@ -58,7 +58,7 @@ public class Group implements Inviting, Manageable {
 
     public void changeGroupName(String name, Consumer current) {
         boolean nameChanged = false;
-        for(Moderator moderator: moderators) {
+        for (Moderator moderator: moderators) {
             if (current.equals(moderator.getModerator())); {
                 this.name = name;
                 nameChanged = true;
@@ -73,7 +73,7 @@ public class Group implements Inviting, Manageable {
 
     public void requestJoin(Consumer current) {
         boolean isMod = false;
-        for(Moderator m: moderators) {
+        for (Moderator m: moderators) {
             if(m.getModerator().equals(current)) {
                 isMod = true;
             }
@@ -275,7 +275,7 @@ public class Group implements Inviting, Manageable {
             }
         }
         if (owner.getModerator().equals(current)) {
-            if(moderators.size()>1) {
+            if (moderators.size()>1) {
                 moderators.remove(temp);
                 owner = moderators.get(0);
                 System.out.println("You have left the group, ownership is passed to " + moderators.get(0).getModerator().getUsername());

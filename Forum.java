@@ -5,7 +5,7 @@ public class Forum {
     private static ArrayList<Group> groups = new ArrayList<Group>();
     private static Consumer current = null;
     private static boolean isGlobalModerator = false;
-    private static ArrayList<Moderator> globalModerator = new ArrayList<Moderator>();
+    private static ArrayList<Moderator> globalModerators = new ArrayList<Moderator>();
     private static Moderator currentModerator = null;
     static boolean home = true;
    public static void main(String[] args) {
@@ -76,6 +76,9 @@ public class Forum {
        boolean done = false;
       while(!done) {
           System.out.println("mp: Make post");
+          if (isGlobalModerator) {
+              System.out.println("mu: modify user");
+          }
           System.out.println("vp: viewPosts");
           System.out.println("vf: viewFriend");
           System.out.println("af: add friend");
@@ -84,9 +87,24 @@ public class Forum {
           System.out.println("EXIT: exits program(loses all data)");
           System.out.println("Enter input(2 character): ");
           String input = s.nextLine();
-         if (input.equals("vg")) {
-            System.out.println("# of groups:  " + groups.size());
-            System.out.println("Public Groups: ");
+          if (input.equalsIgnoreCase("mu") && isGlobalModerator) {
+              System.out.println("Input the name of the user you would like to modify: ");
+              Consumer selectedConsumer = null;
+              input = s.nextLine();
+              for (Consumer c: Users) {
+                  if(c.getUsername().equalsIgnoreCase(input)) {
+                      selectedConsumer = c;
+                  }
+              }
+              if (selectedConsumer == null) {
+                  System.out.println("Invalid username");
+                  System.out.println("Returning back to main menu");
+              } else {
+                  currentModerator.modifyUser(globalModerators, selectedConsumer);
+              }
+          } else if (input.equals("vg")) {
+              System.out.println("# of groups:  " + groups.size());
+              System.out.println("Public Groups: ");
             for (Group g: groups) {
                 if (g.getSearchable()) {
                     System.out.println("   " + g.getGroupName());
@@ -224,6 +242,7 @@ public class Forum {
                                     System.out.println("Unable to remove user, either not in group or they are a moderator.");
                                 } else if (removedUser) {
                                     viewedGroup.delete(match);
+                                    match.getGroupMembership().remove(viewedGroup);
                                 }
                             } else if (input.equalsIgnoreCase("a")) {
                                 System.out.print("Join Requests: ");
@@ -304,6 +323,9 @@ public class Forum {
                             input = s.nextLine();
                             if (input.equalsIgnoreCase("j")) {
                                 viewedGroup.requestJoin(current);
+                                if(current.getGroupMembership().contains((viewedGroup))) {
+                                    current.addGroupMembership(viewedGroup);
+                                }
                             } else if (input.equalsIgnoreCase("q")){
                                 System.out.println("Exiting view of group: " + viewedGroup.getGroupName());
                                 return;
@@ -339,6 +361,7 @@ public class Forum {
                                 g.addMember(current);
                                 g.makeModerator(current);
                                 g.setDescription(description);
+                                current.addGroupMembership(g);
                                 System.out.println("Group \"" + groupName + "\" will be listed.");
                             }
                         }
@@ -406,6 +429,9 @@ public class Forum {
                              if (Users.get(i).getGroupInvites().contains(selectedGroup)) {
                                  Users.get(i).getGroupInvites().remove(selectedGroup);
                              }
+                             if (Users.get(i).getGroupMembership().contains(selectedGroup)) {
+                                 Users.get(i).getGroupMembership().remove(selectedGroup);
+                             }
                          }
                      }
                      currentModerator.deleteGroup(groups, selectedGroup);
@@ -426,15 +452,15 @@ public class Forum {
    }
    public static boolean validateInfo(String username, String password) {
           for(Consumer s: Users) {
+              current = s;
              if(s.getUsername().equals(username) && s.getPassword().equals(password) ) {
-                 for(Moderator gm: globalModerator) {
+                 for(Moderator gm: globalModerators) {
                      if (gm.getModerator().getUsername().equals(current.getUsername())) {
                          isGlobalModerator = true;
                          currentModerator = new Moderator(s);
                          break;
                      }
                  }
-                 current = s;
                  return true;
              }
           }
