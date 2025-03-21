@@ -32,6 +32,10 @@ public class Group implements Inviting, Manageable {
         return joinRequests;
     }
 
+    public ArrayList<Consumer> getInvited() {
+        return invited;
+    }
+
     public ArrayList<Consumer> getGroupMembers() {
         return groupMembers;
     }

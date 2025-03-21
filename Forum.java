@@ -4,7 +4,9 @@ public class Forum {
     static ArrayList<Consumer> Users = new ArrayList<Consumer>();
     private static ArrayList<Group> groups = new ArrayList<Group>();
     private static Consumer current = null;
+    private static boolean isGlobalModerator = false;
     private static ArrayList<Moderator> globalModerator = new ArrayList<Moderator>();
+    private static Moderator currentModerator = null;
     static boolean home = true;
    public static void main(String[] args) {
        Scanner s = new Scanner(System.in);
@@ -90,8 +92,14 @@ public class Forum {
                     System.out.println("   " + g.getGroupName());
                 }
             }
+            if (isGlobalModerator) {
+                System.out.println("You are a global moderator.");
+            }
             System.out.println("v: view");
             System.out.println("c: create");
+            if (isGlobalModerator) {
+                System.out.println("d: delete group");
+            }
             System.out.println("i: accept group invites");
             System.out.println("q: back to main menu");
             input = s.nextLine();
@@ -377,9 +385,31 @@ public class Forum {
                             }
                         }
                     }
+            } else if (isGlobalModerator && input.equalsIgnoreCase("d")) {
+                 System.out.println("Input the name of the group you would like to delete: ");
+                 input = s.nextLine();
+                 Group selectedGroup = null;
+                 for(Group g: groups) {
+                     if (input.equalsIgnoreCase(g.getGroupName())) {
+                         selectedGroup = g;
+                     }
+                 }
+                 if (selectedGroup == null) {
+                     System.out.println("No groups are deleted.");
+                     System.out.println("Returning to main menu");
+                 } else {
+                     if (!selectedGroup.getInvited().isEmpty()) {
+                         for (int i = 0; i < Users.size(); i++) {
+                             if (Users.get(i).getGroupInvites().contains(selectedGroup)) {
+                                 Users.get(i).getGroupInvites().remove(selectedGroup);
+                             }
+                         }
+                     }
+                     currentModerator.deleteGroup(groups, selectedGroup);
+                 }
             } else {
-                System.out.println("Returning to main menu");
-            }
+                 System.out.println("Returning to main menu");
+             }
          }
          else if(input.equals("lo")) {
             logout();
@@ -394,6 +424,12 @@ public class Forum {
    public static boolean validateInfo(String username, String password) {
           for(Consumer s: Users) {
              if(s.getUsername().equals(username) && s.getPassword().equals(password) ) {
+                 for(Moderator gm: globalModerator) {
+                     if(gm.getModerator().getUsername().equals(current.getUsername())) {
+                         isGlobalModerator = true;
+                         currentModerator = new Moderator(s);
+                     }
+                 }
                  current = s;
                  return true;
              }
