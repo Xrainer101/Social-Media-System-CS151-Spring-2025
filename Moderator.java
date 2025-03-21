@@ -14,16 +14,15 @@ public class Moderator {
     public void deleteUser(Consumer user) {
         System.out.println("Do you really want to delete: " + user.getUsername() + "?");
         Scanner sc = new Scanner(System.in);
+        System.out.println("Please input \"Y\" or \"N\"");
         String input = sc.nextLine();
-        while(!input.equals("Y")|| !input.equals("N")) {
-            System.out.println("Please input \"Y\" or \"N\"");
-            input = sc.nextLine();
-        }
         if (input.equals("Y")) {
             Forum.Users.remove(user);
             System.out.println(user.getUsername() + " is deleted.");
         } else if (input.equals("N")) {
             System.out.println(user.getUsername() + " is not deleted.");
+        } else {
+            System.out.println("Invalid input, returning back to main menu.");
         }
     }
 

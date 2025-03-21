@@ -253,13 +253,13 @@ public class Group implements Inviting, Manageable {
             groupMembers.add(moderator.getModerator());
             System.out.println(moderator.getModerator().getUsername() + " is now a regular member.");
             moderators.remove(moderator);
-        } else  if(moderator.getModerator().getUsername().equals(owner.getModerator().getUsername())) {
+        } else if(moderator.getModerator().getUsername().equals(owner.getModerator().getUsername())) {
             if(moderators.size()>1) {
                 moderators.remove(moderator);
                 groupMembers.add(moderator.getModerator());
                 owner = moderators.get(0);
                 System.out.println("You have left the group, ownership is passed to " + moderators.get(0));
-            } else if (moderators.size() <= 1) {
+            } else if (moderators.size() == 1) {
                 System.out.println("You cannot demote yourself as the owner if there are no other moderators.");
             }
         }
