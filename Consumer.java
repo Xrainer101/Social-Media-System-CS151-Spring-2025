@@ -8,6 +8,7 @@ public class Consumer {
    private Messages messages;
    private ArrayList<Group> groupInvites;
    private ArrayList<Group> groups;
+   private boolean isGlobalModerator;
 
    public Consumer(String username, String password) {
       this.username = username;
@@ -17,6 +18,7 @@ public class Consumer {
       friends = new ArrayList<Consumer>();
       posts = new ArrayList<Post>();
       messages = new Messages(this);
+      isGlobalModerator = false;
    }
 
    public String getUsername() {
@@ -25,6 +27,10 @@ public class Consumer {
 
    public String getPassword() {
       return password;
+   }
+
+   public boolean getModeratorStatus() {
+      return isGlobalModerator;
    }
 
    public ArrayList<Group> getGroupMembership() {
@@ -37,6 +43,10 @@ public class Consumer {
 
    public void addGroupMembership(Group g) {
       groups.add(g);
+   }
+
+   public void setGlobalModerator(boolean moderatorStatus) {
+      isGlobalModerator = moderatorStatus;
    }
 
    public void addGroupInvite(Group group) {
@@ -83,6 +93,10 @@ public class Consumer {
 
    public void viewPosts(Scanner s, Consumer user) {
       boolean done = false;
+      Moderator currentModerator = null;
+      if(isGlobalModerator) {
+         currentModerator = new Moderator(user);
+      }
       while(!done) {
       for(int i = 0; i < posts.size(); i++) {
          System.out.print( i + ": " + posts.get(i).getDescription());
@@ -118,8 +132,22 @@ public class Consumer {
           }
           }
 
-       }
-       else {
+       } else if (isGlobalModerator) {
+             System.out.println("y or n: do you want to delete a post?");
+             input = s.nextLine();
+             if (input.equalsIgnoreCase("y")) {
+                System.out.println("Enter index of post to delete: ");
+                String index = s.nextLine();
+                int ind = Integer.parseInt(index);
+                if (posts.size() > ind && ind >= 0) {
+                   currentModerator.deletePost(posts, ind);
+                } else {
+                   System.out.println("Invalid index/input, going back to posts menu.");
+                }
+             } else {
+                System.out.println("Returning back to main menu, no posts have been deleted.");
+             }
+       } else {
           done = true;
        }
 

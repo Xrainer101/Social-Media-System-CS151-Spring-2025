@@ -74,8 +74,9 @@ public class Moderator {
         }
     }
 
-    public void deletePost() {
-        System.out.println();
+    public void deletePost(ArrayList<Post> posts, int index) {
+        posts.remove(index);
+        System.out.println("Post #" + index + " has been removed.");
     }
 
 }

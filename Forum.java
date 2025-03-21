@@ -4,7 +4,6 @@ public class Forum {
     static ArrayList<Consumer> Users = new ArrayList<Consumer>();
     private static ArrayList<Group> groups = new ArrayList<Group>();
     private static Consumer current = null;
-    private static boolean isGlobalModerator = false;
     private static ArrayList<Moderator> globalModerators = new ArrayList<Moderator>();
     private static Moderator currentModerator = null;
     static boolean home = true;
@@ -13,6 +12,7 @@ public class Forum {
        //Dummy data -> login with one of these accounts already.
        Consumer user1 = new Consumer("Sza", "1234");
        Consumer user2 = new Consumer("Matt", "1234");
+       globalModerators.add(new Moderator(user1));
        Users.add(user1);
        Users.add(user2);
        user1.addFriend(user2);
@@ -81,7 +81,7 @@ public class Forum {
        boolean done = false;
       while(!done) {
           System.out.println("mp: Make post");
-          if (isGlobalModerator) {
+          if (current.getModeratorStatus()) {
               System.out.println("mu: modify user");
           }
           System.out.println("vp: viewPosts");
@@ -135,7 +135,7 @@ public class Forum {
 
               } else if (input.equals("pm")) {
                   current.getMessages().UI(s);
-              } else if (input.equalsIgnoreCase("mu") && isGlobalModerator) {
+              } else if (input.equalsIgnoreCase("mu") && (current.getModeratorStatus())) {
               System.out.println("Input the name of the user you would like to modify: ");
               Consumer selectedConsumer = null;
               input = s.nextLine();
@@ -158,12 +158,12 @@ public class Forum {
                       System.out.println("   " + g.getGroupName());
                   }
               }
-              if (isGlobalModerator) {
+              if (current.getModeratorStatus()) {
                   System.out.println("You are a global moderator.");
               }
               System.out.println("v: view");
               System.out.println("c: create");
-              if (isGlobalModerator) {
+              if (current.getModeratorStatus()) {
                   System.out.println("d: delete group");
               }
               System.out.println("i: accept group invites");
@@ -459,7 +459,7 @@ public class Forum {
                           }
                       }
                   }
-              } else if (isGlobalModerator && input.equalsIgnoreCase("d")) {
+              } else if (current.getModeratorStatus() && input.equalsIgnoreCase("d")) {
                   System.out.println("Input the name of the group you would like to delete: ");
                   input = s.nextLine();
                   Group selectedGroup = null;
@@ -501,7 +501,7 @@ public class Forum {
                   if (s.getUsername().equals(username) && s.getPassword().equals(password)) {
                       for (Moderator gm : globalModerators) {
                           if (gm.getModerator().getUsername().equals(current.getUsername())) {
-                              isGlobalModerator = true;
+                              current.setGlobalModerator(true);
                               currentModerator = new Moderator(s);
                               break;
                           }
