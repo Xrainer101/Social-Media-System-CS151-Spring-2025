@@ -160,6 +160,10 @@ public class Forum {
    
                   }
                }
+               else {
+                  System.out.println("Not added because user does not exist, already added, or trying to add yourself");
+                  System.out.println();
+               }
               } else if (input.equals("vf")) {
                   System.out.println("Enter Friend username to view their posts: ");
                   String username = s.nextLine();
