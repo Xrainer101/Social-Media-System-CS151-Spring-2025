@@ -10,7 +10,13 @@ public class Forum {
     static boolean home = true;
    public static void main(String[] args) {
        Scanner s = new Scanner(System.in);
-       Consumer current = null;
+       //Dummy data -> login with one of these accounts already.
+       Consumer user1 = new Consumer("Sza", "1234");
+       Consumer user2 = new Consumer("Matt", "1234");
+       Users.add(user1);
+       Users.add(user2);
+       user1.addFriend(user2);
+       user2.addFriend(user1);
        while(true) {
          if(home) {
            setup(s);
@@ -30,6 +36,7 @@ public class Forum {
         System.out.println("EXIT: exits program(loses all data)");
         System.out.println("Enter input based on key");
         String input = s.nextLine();
+        tryExit(input, s);
         if (input.equals("S")) {
             System.out.println("Enter username: ");
             String username = s.nextLine();
@@ -63,9 +70,7 @@ public class Forum {
             }
             
         }
-        else if(input.equals("EXIT")) {
-            System.exit(0);
-        }
+
         
      }
      
@@ -441,9 +446,65 @@ public class Forum {
              }
          }
          else if (input.equals("lo")) {
+         System.out.println("mp: Make post");
+         System.out.println("vp: viewPosts");
+         System.out.println("vf: viewFriend");
+         System.out.println("af: add friend");
+         System.out.println("pm: private messaging");
+         System.out.println("lo: logout");
+         System.out.println("EXIT: exits program(loses all data)");
+         System.out.println("Enter input(2 character): ");
+         String input = s.nextLine();
+         tryExit(input, s);
+         if(input.equals("lo")) {
             logout();
             done = true;
          }
+         else if(input.equals("mp")) {
+            System.out.println("Enter Post: ");
+            String post = s.nextLine();
+            current.addPost(post);
+            System.out.println();
+            System.out.println("Post added successfully");
+            System.out.println();
+            System.out.println();
+
+         }
+         else if(input.equals("vp")) {
+            current.viewPosts(s, null);
+         }
+         else if(input.equals("af")) {
+            System.out.println("Enter Friend username: ");
+            String username = s.nextLine();
+            Consumer result = null;
+            for(Consumer U : Users) {
+               if (U.getUsername().equals(username) && U != current) {
+                    result = U;
+               }
+            }
+            if(result != null) {
+               result.addFriend(current);
+               current.addFriend(result);
+               System.out.println("Added successfully");
+            }
+            else {
+               System.out.println("Not added!");
+            }
+         }
+         else if(input.equals("vf")) {
+            System.out.println("Enter Friend username to view their posts: ");
+            String username = s.nextLine();
+            Consumer result = current.checkFriend(username);
+            if(result != null) {
+               result.viewPosts(s, current);
+            }
+            else {
+               System.out.println("Friend does not exist or you are trying add yourself as a friend");
+            }
+
+         }
+         else if(input.equals("pm")) {
+            current.getMessages().UI(s);
          else if (input.equals("EXIT")) {
             System.exit(0);
          }
@@ -469,6 +530,12 @@ public class Forum {
    public static void logout() {
       home = true; 
       current = null;
+   }
+   public static void tryExit(String p, Scanner s) {
+      if(p.equals("EXIT")) {
+          s.close();
+         System.exit(0);
+      }
    }
 
 }
