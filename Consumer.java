@@ -95,10 +95,6 @@ public class Consumer {
 
    public void viewPosts(Scanner s, Consumer user) {
       boolean done = false;
-      Moderator currentModerator = null;
-      if(isGlobalModerator) {
-         currentModerator = new Moderator(user);
-      }
       while(!done) {
       for(int i = 0; i < posts.size(); i++) {
          System.out.print( i + ": " + posts.get(i).getDescription());
@@ -133,25 +129,6 @@ public class Consumer {
             System.out.println("Try again");
           }
           }
-
-       } else if (isGlobalModerator) {
-             System.out.println("y or n: do you want to delete a post?");
-             input = s.nextLine();
-             if (input.equalsIgnoreCase("y")) {
-                System.out.println("Enter index of post to delete: ");
-                String index = s.nextLine();
-                int ind = Integer.parseInt(index);
-                if (posts.size() > ind && ind >= 0) {
-                   currentModerator.deletePost(posts, ind);
-                } else {
-                   System.out.println("Invalid index/input, going back to posts menu.");
-
-                    
-                }
-             } else {
-                System.out.println("Returning back to main menu, no posts have been deleted.");
-                done = true;
-             }
        } else {
           done = true;
        }
