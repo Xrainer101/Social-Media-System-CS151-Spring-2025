@@ -44,10 +44,6 @@ public class Group implements Inviting, Manageable {
         return moderators;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public boolean getSearchable() {
         return searchable;
     }

@@ -30,7 +30,7 @@ public class Forum {
         System.out.println("EXIT: exits program(loses all data)");
         System.out.println("Enter input based on key");
         String input = s.nextLine();
-        if(input.equals("S")) {
+        if (input.equals("S")) {
             System.out.println("Enter username: ");
             String username = s.nextLine();
             System.out.println("Enter password: ");
@@ -84,7 +84,7 @@ public class Forum {
           System.out.println("EXIT: exits program(loses all data)");
           System.out.println("Enter input(2 character): ");
           String input = s.nextLine();
-         if(input.equals("vg")) {
+         if (input.equals("vg")) {
             System.out.println("# of groups:  " + groups.size());
             System.out.println("Public Groups: ");
             for (Group g: groups) {
@@ -126,6 +126,7 @@ public class Forum {
                     for (int i = 0; i < viewedGroup.getModerators().size(); i++) {
                         if (current.equals(viewedGroup.getModerators().get(i).getModerator())) {
                             isModerator = true;
+                            break;
                         }
                     }
                         if (current.equals(viewedGroup.getOwner().getModerator())) {
@@ -161,7 +162,7 @@ public class Forum {
                                 }
                                 if (notAModerator) {
                                     System.out.println("Cannot demote a regular user, or this user does not exist.");
-                                } else if (!notAModerator) {
+                                } else {
                                     for (int j = 0; j < viewedGroup.getModerators().size(); j++) {
                                         if (viewedGroup.getModerators().get(j).getModerator().getUsername().equalsIgnoreCase(input)) {
                                             viewedGroup.demoteModerator(viewedGroup.getModerators().get(j));
@@ -197,6 +198,7 @@ public class Forum {
                                 for (Group g : groups) {
                                     if (g.getGroupName().equals(input)) {
                                         duplicateName = true;
+                                        break;
                                     }
                                 }
                                 if (input.equalsIgnoreCase(viewedGroup.getGroupName())) {
@@ -319,6 +321,7 @@ public class Forum {
                 for(Group g: groups) {
                     if (g.getGroupName().equalsIgnoreCase(groupName)) {
                         groupExists = true;
+                        break;
                     }
                 }
                 if (!groupExists) {
@@ -411,11 +414,11 @@ public class Forum {
                  System.out.println("Returning to main menu");
              }
          }
-         else if(input.equals("lo")) {
+         else if (input.equals("lo")) {
             logout();
             done = true;
          }
-         else if(input.equals("EXIT")) {
+         else if (input.equals("EXIT")) {
             System.exit(0);
          }
           
@@ -425,9 +428,10 @@ public class Forum {
           for(Consumer s: Users) {
              if(s.getUsername().equals(username) && s.getPassword().equals(password) ) {
                  for(Moderator gm: globalModerator) {
-                     if(gm.getModerator().getUsername().equals(current.getUsername())) {
+                     if (gm.getModerator().getUsername().equals(current.getUsername())) {
                          isGlobalModerator = true;
                          currentModerator = new Moderator(s);
+                         break;
                      }
                  }
                  current = s;

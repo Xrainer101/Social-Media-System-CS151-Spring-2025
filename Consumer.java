@@ -31,7 +31,7 @@ public class Consumer {
       }
       if (duplicateName) {
          System.out.println(username + " already has a pending invite to " + group.getGroupName());
-      } else if (!duplicateName) {
+      } else {
          groupInvites.add(group);
       }
    }
@@ -39,13 +39,14 @@ public class Consumer {
    public void acceptGroupInvite(Group group) {
       boolean foundGroup = false;
       for (Group g : groupInvites) {
-         if (group.getGroupName().equals(g.getGroupName())) {
-            foundGroup = true;
-         }
+          if (group.getGroupName().equals(g.getGroupName())) {
+              foundGroup = true;
+              break;
+          }
       }
       if (foundGroup) {
          groupInvites.remove(group);
-      } else if (!foundGroup) {
+      } else {
          System.out.println(username + " is not in the group " + group.getGroupName());
       }
    }
