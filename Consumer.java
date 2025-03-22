@@ -1,7 +1,7 @@
 import javax.naming.LimitExceededException;
 import java.util.ArrayList;
 import java.util.Scanner;
-public class Consumer extends Sharer {
+public class Consumer extends Sharer implements Manageable{
    private String username;
    private String password;
    private ArrayList<Consumer> friends;
@@ -36,6 +36,54 @@ public class Consumer extends Sharer {
       return password;
    }
 
+   @Override
+    public void changeSettings() {
+        //Perhaps there should be a change username or change password method
+        Scanner s = new Scanner(System.in);
+        boolean done = false;
+        
+        while(!done) {
+         System.out.println("UN: Change username");
+         System.out.println("PW: Change password");
+         System.out.println("EXIT: End management");
+         String input = s.nextLine();
+         if(input.equals("UN")) {
+             System.out.println("Enter username: ");
+             username = s.nextLine();
+             System.out.println("Username successfully changed");
+             System.out.println();
+         }
+         else if(input.equals("PW")) {
+             System.out.println("Enter password: ");
+             password = s.nextLine();
+             System.out.println("Password successfully changed");
+             System.out.println();
+             
+         }
+         else if(input.equals("EXIT")) {
+             done = true;
+         } else {
+            System.out.println("Invalid input");
+         }
+      }
+    }
+    @Override
+    public void clear() {
+      //delete all messages and posts and such  
+      throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+   @Override
+   public void metrics() {
+         //show number of messages and posts and such
+      throw new UnsupportedOperationException("Not supported yet.");
+   }
+
+   @Override
+   public void delete(Consumer o) {
+      //delete all references to user (from all of the lists that it is in)
+      throw new UnsupportedOperationException("Not supported yet.");
+   }
    public boolean getModeratorStatus() {
       return isGlobalModerator;
    }
@@ -133,8 +181,22 @@ public class Consumer extends Sharer {
       }
    }
 
+   public void noPosts() throws NoPostsException {
+      if(posts.size() == 0) {
+         throw new NoPostsException("No posts to display");
+      }
+   }
+
    public void viewPosts(Scanner s, Consumer user) {
       boolean done = false;
+      try {
+         noPosts();
+      }
+      catch(NoPostsException e) {
+         System.out.println(e.getMessage());
+         System.out.println();
+         return;
+      }
       while(!done) {
       for(int i = 0; i < posts.size(); i++) {
          System.out.print( i + ": " + posts.get(i).getDescription());
@@ -148,21 +210,12 @@ public class Consumer extends Sharer {
           Post target = null;
           while(!valid) {
           try {
-             if(posts.size() > 0 ) {
              System.out.println("Enter index: ");
              String index = s.nextLine();
              int ind = Integer.parseInt(index);
              target = posts.get(ind);
              target.viewPost(s, user);
              valid = true;
-             }
-             else {
-               System.out.println("This user has no posts to display");
-               System.out.println("Going back");
-               System.out.println();
-               valid = true;
-               done = true;
-             }
           }
           catch(Exception e) {
             Forum.tryExit(input,s);
@@ -212,33 +265,40 @@ public class Consumer extends Sharer {
 
    }
 
+
    @Override 
    public void edit() {
       boolean done = false;
       while(!done) {
-            for(int i = 0; i < posts.size(); i++) {
+           try {
+            noPosts();
+           }
+           catch(NoPostsException e) {
+               System.out.println(e.getMessage());
+               System.out.println();
+              return;
+           }
+           for(int i = 0; i < posts.size(); i++) {
                 System.out.println(i  + ": " +posts.get(i).getDescription());
             }
             try {
-                if(posts.size() > 0) {
-                    System.out.println("Enter index of the post you want to edit: ");
-                    int index = Integer.parseInt(scanner.nextLine());
-                    Post currentPost = posts.get(index);
-                    System.out.println("Old Post: " + currentPost.getDescription());
-                    System.out.println("Enter edited post: ");
-                    String editedPost = scanner.nextLine();
-                    currentPost.setDescription(editedPost);
-                    System.out.println(" Message edited successfully");
-                    System.out.println();
-                    done = true;
-                }
-                else {
-                    System.out.println("No posts to edit");
-                    System.out.println();
-                    done = true;
-                }
-                
-
+               System.out.println("Enter index of the post you want to edit: ");
+               int index = Integer.parseInt(scanner.nextLine());
+               Post currentPost = posts.get(index);
+               System.out.println("Old Post: " + currentPost.getDescription());
+               System.out.println("Enter edited post: ");
+               String editedPost = scanner.nextLine();
+               if(currentPost.checkDescriptionString(editedPost)) {
+                  currentPost.setDescription(editedPost);
+                  System.out.println(" Message edited successfully");
+                  System.out.println();
+                  done = true;
+               }
+               else {
+                 System.out.println("Failed in editing message, try again!");
+                 System.out.println();
+                 done = true;
+               }
             }
             catch(Exception e) {
                 System.out.println("Not valid index, try again");
@@ -249,28 +309,28 @@ public class Consumer extends Sharer {
       }
 
    @Override 
-   public void delete() {
+   public void deleteSharer() {
       boolean done = false;
       while(!done) {
+            try {
+             noPosts();
+            }
+            catch(NoPostsException e) {
+               System.out.println(e.getMessage());
+               System.out.println();
+               return;
+            }
             for(int i = 0; i < posts.size(); i++) {
                 System.out.println(i + ": " + posts.get(i).getDescription());
             }
             try {
-                if(posts.size() > 0) {
-                    System.out.println("Enter index of the post you want to delete: ");
-                    int index = scanner.nextInt();
-                    posts.remove(posts.get(index));
-                    System.out.println(" Message deleted successfully");
-                    System.out.println();
-                    done = true;
-                }
-                else {
-                    System.out.println("No posts to delete ");
-                    System.out.println();
-                    done = true;
-                }
+               System.out.println("Enter index of the post you want to delete: ");
+               int index = Integer.parseInt(scanner.nextLine());
+               posts.remove(posts.get(index));
+               System.out.println(" Message deleted successfully");
+               System.out.println();
+               done = true;
                 
-
             }
             catch(Exception e) {
                 System.out.println("Not valid index, try again");
@@ -278,13 +338,19 @@ public class Consumer extends Sharer {
             }
          }
    }
+
    @Override 
    public void mostPopular() {
-      if(posts.size() == 0) {
-         System.out.println("no posts to display");
-         System.out.println();
+      boolean exception = false;
+      try {
+         noPosts();
       }
-      else {
+      catch(NoPostsException e) {
+         System.out.println(e.getMessage());
+         System.out.println();
+         exception = true;
+      }
+      if(!exception) {
          int max = posts.get(0).getLikes();
          Post maxPost = posts.get(0);
          for(int i = 0; i < posts.size(); i++) {

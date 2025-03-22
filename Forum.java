@@ -202,8 +202,7 @@ public class Forum {
                   current.edit();
               }else if(input.equals("dp")) {
                 current.setScanner(s);
-                current.delete();
-          
+                current.deleteSharer();
               }else if(input.equals("ml")){
                 current.setScanner(s);
                 current.mostPopular();

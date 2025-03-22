@@ -48,7 +48,7 @@ public class Messages extends Sharer {
            return null;
     }
     @Override
-    public void delete() {
+    public void deleteSharer() {
         boolean done = false;
         while(!done) {
             for(int i = 0; i < SentMessages.size(); i++) {
@@ -196,7 +196,7 @@ public class Messages extends Sharer {
                     System.out.println();
                     return;
                 case 6:
-                   user.getMessages().delete();
+                   user.getMessages().deleteSharer();
                    break;
                 case 7:
                    user.getMessages().mostPopular();
