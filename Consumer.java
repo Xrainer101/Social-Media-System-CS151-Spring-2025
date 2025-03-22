@@ -1,3 +1,4 @@
+import javax.naming.LimitExceededException;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Consumer extends Sharer {
@@ -93,12 +94,36 @@ public class Consumer extends Sharer {
       return posts;
    }
 
+   public void fullFriends() throws LimitExceededException {
+       if (friends.size() >= 100) {
+           throw new LimitExceededException("LimitExceededException: Cannot add/request, friends list is full at 100.");
+       }
+    }
+
+    public void maximumPosts() throws LimitExceededException {
+       if (posts.size() >= 100) {
+           throw new LimitExceededException("LimitExceededException: Cannot add post, the maximum is 100.");
+       }
+    }
+
    public void addFriend(Consumer other) {
+       try {
+           fullFriends();
+       } catch (LimitExceededException e) {
+           System.out.println(e.getMessage());
+           return;
+       }
       this.friends.add(other);
    }
 
    public boolean addPost(String description) {
-      Post post = new Post(description);
+       try {
+           maximumPosts();
+       } catch (LimitExceededException e) {
+           System.out.println(e.getMessage());
+           return false;
+       }
+       Post post = new Post(description);
       if(!post.checkDescriptionString(description)) {
           return false;
       }
@@ -168,6 +193,12 @@ public class Consumer extends Sharer {
          return friendRequests.contains(r.username);
    }
    public void addRequest(Consumer c) {
+       try {
+           fullFriends();
+       } catch (LimitExceededException e) {
+           System.out.println(e.getMessage());
+           return;
+       }
       friendRequests.add(c.username);
         
    }

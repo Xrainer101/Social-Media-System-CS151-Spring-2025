@@ -39,28 +39,35 @@ public class Forum {
         String input = s.nextLine();
         tryExit(input, s);
         if (input.equals("S")) {
-            System.out.println("Enter username: ");
-            String username = s.nextLine();
-            System.out.println("Enter password: ");
-            String password = s.nextLine();
-            boolean exist = false;
-            for(Consumer U: Users) {
-               if(U.getUsername().equals(username)) {
-                  exist = true;
-                  break;
-               }
-            }
-            if(!exist) {
-            Users.add(new Consumer(username, password));
-            System.out.println();
-            System.out.println("Signup successful");
-            System.out.println();
-            System.out.println();
-            }
-            else {
-               System.out.println("This username is already in use!");
-               System.out.println("try again!");
-               System.out.println();
+            try {
+                if (Users.size() >= 100) {
+                    throw new LimitExceededException("LimitExceededException: Cannot signup more users, 100 is the maximum amount of possible users.");
+                } else if (Users.size() < 100) {
+                    System.out.println("Enter username: ");
+                    String username = s.nextLine();
+                    System.out.println("Enter password: ");
+                    String password = s.nextLine();
+                    boolean exist = false;
+                    for (Consumer U : Users) {
+                        if (U.getUsername().equals(username)) {
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if (!exist) {
+                        Users.add(new Consumer(username, password));
+                        System.out.println();
+                        System.out.println("Signup successful");
+                        System.out.println();
+                        System.out.println();
+                    } else {
+                        System.out.println("This username is already in use!");
+                        System.out.println("try again!");
+                        System.out.println();
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
         else if(input.equals("L")) {
@@ -319,7 +326,9 @@ public class Forum {
                                       if (c.getUsername().equalsIgnoreCase(input)) {
                                           foundUser = true;
                                           viewedGroup.inviteUser(c);
-                                          c.addGroupInvite(viewedGroup);
+                                          if (viewedGroup.getGroupMaximumSize() < 100) {
+                                              c.addGroupInvite(viewedGroup);
+                                          }
                                       }
                                   }
                                   if (!foundUser) {
@@ -479,8 +488,7 @@ public class Forum {
                   if (!groupExists) {
                       try {
                           if (groups.size() >= 100) {
-                              throw new LimitExceededException("LimitExceededException: Cannot add more groups, 100 is the maximum amount of possible groups.");
-
+                              throw new LimitExceededException("LimitExceededException: Cannot create more groups, 100 is the maximum amount of possible groups.");
                           } else if (groups.size() < 100){
                               groups.add(new Group(groupName, new Moderator(current)));
                               System.out.println("New group \"" + groupName + "\" has been created.");
@@ -545,7 +553,9 @@ public class Forum {
                           if (current.getGroupInvites().get(i).getGroupName().equals(input)) {
                               for (int j = 0; j < groups.size(); j++) {
                                   groups.get(j).acceptedInvite(current);
+                                  if (groups.get(j).getGroupMaximumSize() < 100) {
                                   current.acceptGroupInvite(groups.get(j));
+                                  }
                               }
                           }
                       }
