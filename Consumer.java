@@ -97,9 +97,15 @@ public class Consumer extends Sharer {
       this.friends.add(other);
    }
 
-   public void addPost(String description) {
+   public boolean addPost(String description) {
       Post post = new Post(description);
-      this.posts.add(post);
+      if(!post.checkDescriptionString(description)) {
+          return false;
+      }
+      else {
+         this.posts.add(post);
+         return true;
+      }
    }
 
    public void viewPosts(Scanner s, Consumer user) {

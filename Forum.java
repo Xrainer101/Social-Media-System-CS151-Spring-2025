@@ -118,11 +118,20 @@ public class Forum {
           } else if (input.equals("mp")) {
               System.out.println("Enter Post: ");
               String post = s.nextLine();
-              current.addPost(post);
-              System.out.println();
-              System.out.println("Post added successfully");
-              System.out.println();
-              System.out.println();
+              
+              if(current.addPost(post)) {
+                System.out.println();
+                System.out.println("Post added successfully");
+                System.out.println();
+                System.out.println();
+              }
+              else {
+                System.out.println();
+                System.out.println("Post not added");
+                System.out.println();
+                System.out.println();
+              }
+               
               } else if (input.equals("vp")) {
                   current.viewPosts(s, null);
               } else if(input.equals("af")) {

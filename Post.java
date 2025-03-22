@@ -32,7 +32,36 @@ public class Post {
     public String getDescription() {
          return description;
     }
+    public void checkDescriptionException(String [] words) throws InvalidDescriptionException {
+       if(words.length > 30) {
+          throw new InvalidDescriptionException("This post has too many words!");
+       }
+       else if(words.length == 1) {
+             int count = 0;
+            for(int i = 0; i < words[0].length(); i++) {
+               if(Character.isDigit(words[0].charAt(i))) {
+                  count +=1;
+               }
+            }
+            if(count == words[0].length()) {
+                throw new InvalidDescriptionException("Post can't be just a number!");
+            }
+       }
 
+    }
+    public boolean checkDescriptionString(String description) {
+        try {
+        String [] words = description.split(" ");
+        checkDescriptionException(words);
+        return true;
+        }
+        catch(InvalidDescriptionException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+    }
+    
     public void viewPost (Scanner s, Consumer friend) {
         //mode is based on if you are looking at your posts or friends post
         System.out.println("Post");
