@@ -11,10 +11,10 @@ public class Post {
     }
     private class Comment {
         String message;
-        String name;
-    public Comment(String message, String name) {
+        Consumer from;
+    public Comment(String message, Consumer from) {
        this.message = message;
-       this.name = name;
+       this.from = from;
     }
     }
     public void addLike() {
@@ -23,10 +23,10 @@ public class Post {
     public void setDescription(String p) {
         this.description = p;
     }
-    public void addComment(Scanner s, String name) {
+    public void addComment(Scanner s, Consumer friend) {
         System.out.println("Enter Comment: ");
         String description = s.nextLine();
-        Comment c = new Comment(description, name);
+        Comment c = new Comment(description, friend);
         comments.add(c);
     }
     public String getDescription() {
@@ -69,14 +69,14 @@ public class Post {
         System.out.println("Comments: ");
         for(Comment comment: comments) {
             System.out.println(comment.message);
-            System.out.println("From: " + comment.name);
+            System.out.println("From: " + comment.from.getUsername());
         }
       
         if (friend != null) {
             System.out.println("add comment (enter y to add): ");
             String input = s.nextLine();
             if(input.equals("y")) {
-                addComment(s, friend.getUsername());
+                addComment(s, friend);
             }
             System.out.println("like post (y/n)");
             input = s.nextLine();

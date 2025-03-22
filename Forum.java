@@ -33,6 +33,7 @@ public class Forum {
      while(!doneSetup) {
         System.out.println("L: Login");
         System.out.println("S: Sign Up");
+        System.out.println("D: Delete User");
         System.out.println("EXIT: exits program(loses all data)");
         System.out.println("Enter input based on key");
         String input = s.nextLine();
@@ -84,11 +85,37 @@ public class Forum {
             }
 
         }
+        else if(input.equals("D")) {
+            System.out.println("Enter username: ");
+            String username = s.nextLine();
+            System.out.println("Enter password");
+            String password = s.nextLine();
+            boolean found = false;
+            if(validateInfo(username, password)) {
+            for(Consumer c: Users) {
+                if(c.getUsername().equals(username)) {
+                    c.delete(c);
+                    found = true;
+                }
+            }
+            }
+            else {
+                found = false;
+            }
+            if(!found) {
+                System.out.println();
+                System.out.println("This user does not exist or wrong password. Can't delete");
+                System.out.println("Try again!");
+                System.out.println();
+                System.out.println();
+            }
+        }
+            
+        }
 
 
      }
 
-   }
    // please add a printline statement in the same format and an if statement.
    // to implement functionality.
    public static void functionality(Scanner s) {
@@ -103,9 +130,12 @@ public class Forum {
           System.out.println("af: add friend");
           System.out.println("vg: view groups");
           System.out.println("pm: private messaging");
+          System.out.println("vm: view metrics");
+          System.out.println("cd: clear post data");
           System.out.println("ep: edit post");
           System.out.println("dp: delete Post");
           System.out.println("ml: findMostLikedPost");
+          System.out.println("cs: changeSettings");
           System.out.println("lo: logout");
           System.out.println("EXIT: exits program(loses all data)");
           System.out.println("Enter input(2 character): ");
@@ -198,6 +228,12 @@ public class Forum {
               }else if(input.equals("ml")){
                 current.setScanner(s);
                 current.mostPopular();
+              } else if(input.equals("cs")){
+                current.changeSettings();
+              }else if(input.equals("vm")) {
+                current.metrics();
+              }else if(input.equals("cd")){
+                current.clear();
               }else if (input.equalsIgnoreCase("mu") && (current.getModeratorStatus())) {
               System.out.println("Input the name of the user you would like to modify: ");
               Consumer selectedConsumer = null;

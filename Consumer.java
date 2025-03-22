@@ -44,13 +44,26 @@ public class Consumer extends Sharer implements Manageable{
         while(!done) {
          System.out.println("UN: Change username");
          System.out.println("PW: Change password");
-         System.out.println("EXIT: End management");
+         System.out.println("EM: End management (goes to main menu)");
+         System.out.println("Enter input: ");
          String input = s.nextLine();
          if(input.equals("UN")) {
              System.out.println("Enter username: ");
-             username = s.nextLine();
-             System.out.println("Username successfully changed");
-             System.out.println();
+             String newUsername = s.nextLine();
+             boolean exists = false;
+             for(Consumer p: Forum.Users) {
+               if(p.getUsername().equals(newUsername)) {
+                  System.out.println("This username already exists, cannot change to this");
+                  System.out.println();
+                  exists = true;
+               }
+             }
+             if(!exists) {
+               username = newUsername;
+               System.out.println("Username changed successfully!");
+               System.out.println();
+             }
+            
          }
          else if(input.equals("PW")) {
              System.out.println("Enter password: ");
@@ -59,7 +72,7 @@ public class Consumer extends Sharer implements Manageable{
              System.out.println();
              
          }
-         else if(input.equals("EXIT")) {
+         else if(input.equals("EM")) {
              done = true;
          } else {
             System.out.println("Invalid input");
@@ -68,20 +81,33 @@ public class Consumer extends Sharer implements Manageable{
     }
     @Override
     public void clear() {
-      //delete all messages and posts and such  
-      throw new UnsupportedOperationException("Not supported yet.");
+         posts.clear();
+         System.out.println("all posts cleared");
+         System.out.println();
     }
 
    @Override
    public void metrics() {
-         //show number of messages and posts and such
-      throw new UnsupportedOperationException("Not supported yet.");
+         System.out.println("Number of friends: " + this.friends.size());
+         System.out.println("Number of posts: " + this.posts.size());
+         System.out.println("Friends: ");
+         for(int i = 0; i < this.friends.size(); i++) {
+            System.out.print(friends.get(i).getUsername() + ", ");
+         }
+         System.out.println();
+         System.out.println();
    }
 
    @Override
    public void delete(Consumer o) {
-      //delete all references to user (from all of the lists that it is in)
-      throw new UnsupportedOperationException("Not supported yet.");
+      for(Consumer c: Forum.Users) {
+           if(c.friends.contains(o)) {
+               c.friends.remove(o);
+           }
+      }
+      Forum.Users.remove(o);
+      System.out.println("Deleted Successfully");
+      System.out.println();
    }
    public boolean getModeratorStatus() {
       return isGlobalModerator;
