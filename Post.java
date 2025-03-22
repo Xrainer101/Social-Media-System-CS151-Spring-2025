@@ -20,6 +20,9 @@ public class Post {
     public void addLike() {
           likes += 1;
     }
+    public void setDescription(String p) {
+         this.description = p;
+    }
     public void addComment(Scanner s, String name) {
         System.out.println("Enter Comment: ");
         String description = s.nextLine();
@@ -29,8 +32,10 @@ public class Post {
     public String getDescription() {
          return description;
     }
-    public void viewPost(Scanner s, Consumer friend) {
+
+    public void viewPost (Scanner s, Consumer friend) {
         //mode is based on if you are looking at your posts or friends post
+        System.out.println("Post");
         System.out.println(description);
         System.out.println("Comments: ");
         for(Comment comment: comments) {

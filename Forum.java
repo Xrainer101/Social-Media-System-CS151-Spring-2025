@@ -103,6 +103,9 @@ public class Forum {
           System.out.println("af: add friend");
           System.out.println("vg: view groups");
           System.out.println("pm: private messaging");
+          System.out.println("ep: edit post");
+          System.out.println("dp: delete Post");
+          System.out.println("ml: findMostLikedPost");
           System.out.println("lo: logout");
           System.out.println("EXIT: exits program(loses all data)");
           System.out.println("Enter input(2 character): ");
@@ -176,7 +179,18 @@ public class Forum {
 
               } else if (input.equals("pm")) {
                   current.getMessages().UI(s);
-              } else if (input.equalsIgnoreCase("mu") && (current.getModeratorStatus())) {
+              } 
+              else if(input.equals("ep")) {
+                  current.setScanner(s);
+                  current.edit();
+              }else if(input.equals("dp")) {
+                current.setScanner(s);
+                current.delete();
+          
+              }else if(input.equals("ml")){
+                current.setScanner(s);
+                current.mostPopular();
+              }else if (input.equalsIgnoreCase("mu") && (current.getModeratorStatus())) {
               System.out.println("Input the name of the user you would like to modify: ");
               Consumer selectedConsumer = null;
               input = s.nextLine();
