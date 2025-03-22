@@ -3,78 +3,106 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Messages {
-    private Consumer user = null;
-    private List<Message> SentMessages = new ArrayList<>();
-    private List<Message> ReceivedMessages = new ArrayList<>();
-    private static Scanner scanner;
+    private Consumer user;
+    private List<Message> sentMessages = new ArrayList<>();
+    private List<Message> receivedMessages = new ArrayList<>();
+
+    Scanner sc = new Scanner(System.in);
 
     public Messages(Consumer user) {
         this.user = user;
+        this.sc = new Scanner(System.in);
     }
 
     class Message {
-        String message;
-        String name;
-        Message(String message, String name) {
-            this.message = message;
-            this.name = name;
+        String text;
+        String sender;
+
+        Message(String text, String sender) {
+            this.text = text;
+            this.sender = sender;
         }
     }
-    public void sendMessage() {
-        System.out.print("Enter recipient's name: ");
-        String recipient = scanner.nextLine();
 
-        if (!user.getFriendsUsernames().contains(recipient)) {
-            System.out.println(recipient + " is not in your friends list. Add them first.");
+    public void sendMessage() {
+        System.out.print("Recipient's username: ");
+        String recpt = sc.nextLine();
+
+        if (!user.getFriendsUsernames().contains(recpt)) {
+            System.out.println(recpt + " is not in your friends list. Add them first. Go back to main menu and add your friend");
             return;
         }
 
         System.out.print("Enter your message: ");
-        String message = scanner.nextLine();
-        SentMessages.add(new Message(message, recipient));
-        Consumer friend = user.checkFriend(recipient);
-        Messages friendMessages = friend.getMessages();
-        friendMessages.ReceivedMessages.add(new Message(message, user.getUsername()));
-        System.out.println("Message sent to " + recipient);
+        String message = sc.nextLine();
+
+        sentMessages.add(new Message(message, recpt));
+        
+        Consumer friend = user.checkFriend(recpt);
+        friend.getMessages().receivedMessages.add(new Message(message, user.getUsername()));
+
+        System.out.println("Message sent to " + recpt);
     }
 
+    public void receiveMessage() {
+    if (receivedMessages.isEmpty()) {
+        System.out.println("No new messages.");
+        return;
+    }
     
-    public void receiveMessage() {}
-    public void displayMessages() {}
-    public void displayFriends() {}
+    System.out.println("\nNew Messages:");
+    for (int i = 0; i < receivedMessages.size(); i++) {
+        Message msg = receivedMessages.get(i);
+        System.out.println(msg.sender + ": " + msg.text);
+    }
+}
 
-    public void UI (Scanner s) {
-        scanner = s;
-        while (true) {
+public void displaySentMessages() {
+    if (sentMessages.isEmpty()) {
+        System.out.println("You haven't sent any messages yet.");
+        return;
+    }
+    
+    System.out.println("\nSent Messages:");
+    for (int i = 0; i < sentMessages.size(); i++) {
+        Message msg = sentMessages.get(i);
+        System.out.println(msg.sender + ": " + msg.text);
+    }
+}
+
+public void displayFriends() {
+    List<String> friends = user.getFriendsUsernames();
+    if (friends.isEmpty()) {
+        System.out.println("You haven’t added any friends yet.");
+        return;
+    }
+    System.out.println("\nYour Friends:");
+    for (String friend : friends) {
+        System.out.println("- " + friend);
+    }
+}
+
+        public void UI(Scanner s) {
+        this.sc = s;
+        boolean exit = false;
+
+        while (!exit) {
             System.out.println("\n1. Send a message");
-            System.out.println("2. Receive a message");
-            System.out.println("3. Display messages");
+            System.out.println("2. Receive messages");
+            System.out.println("3. Display sent messages");
             System.out.println("4. Display friends");
-            System.out.println("5. Go Home");
+            System.out.println("5. Go back to main menu");
             System.out.print("Enter your choice: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            String ch = sc.nextLine();
 
-            switch (choice) {
-                case 1:
-                   user.getMessages().sendMessage();
-                    break;
-                case 2:
-                    user.getMessages().receiveMessage();
-                    break;
-                case 3:
-                    user.getMessages().displayMessages();
-                    break;
-                case 4:
-                    user.getMessages().displayFriends();
-                    break;
-                case 5:
-                    System.out.println("Exiting the messaging system...");
-                    System.out.println();
-                    return;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+            switch (ch) {
+                case "1": sendMessage(); break;
+                case "2": receiveMessage(); break;
+                case "3": displaySentMessages(); break;
+                case "4": displayFriends(); break;
+                case "5": exit = true; System.out.println("Returning to main menu..."); break;
+                default: System.out.println("Invalid choice. Please try again.");
             }
         }
     }
