@@ -8,7 +8,7 @@ Classes:
 * Messages -  message functionality, holds the information that lets the user send and receive messages from one another.
 * Moderator - user but with the ability to delete posts, groups, and other users
 * Consumer - basic user, holds posts, messages, friends
-* Post - post functionality, holds information regarding the description of the post and the amount of likes it has. nested comment class lets it hold comments
+* Post - post functionality, holds information regarding the description of the post and the amount of likes it has. nested comment class lets it hold comments  
 Our social media system is designed where the Forum class functions as the main database, holding the registered Consumers and created Groups. Posts, Friends, and Messages are held within Consumer. When a user logs into our system, they're the designated current Consumer and is given a menu that lets them view posts, view groups, view or add friends, and message other users. The view posts and view groups submenus allow the user to create new posts or new groups. When the user is finished and ready to logout, they are able to logout and either sign up for a new account or login to a new one.
 # Installation Instructions
 * Clone this repository: https://github.com/Xrainer101/Social-Media-System-CS151-Spring-2025
