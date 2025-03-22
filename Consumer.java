@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 public class Consumer extends User {
    private String username;
    private String password;
@@ -30,8 +31,7 @@ public class Consumer extends User {
          System.out.println("Enter password: ");
          String childPassword = s.nextLine();
          ChildUser child = new ChildUser(childUsername, childPassword);
-         Users.add(child);
-         //Maybe implement usersGet method in forum
+         Forum.Users.add(child);
          children.add(child);
          System.out.println();
          System.out.println("Child successful created");
