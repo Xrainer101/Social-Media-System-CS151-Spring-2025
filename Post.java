@@ -21,7 +21,7 @@ public class Post {
           likes += 1;
     }
     public void setDescription(String p) {
-         this.description = p;
+        this.description = p;
     }
     public void addComment(Scanner s, String name) {
         System.out.println("Enter Comment: ");
