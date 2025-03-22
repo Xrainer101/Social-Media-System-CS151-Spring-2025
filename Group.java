@@ -48,6 +48,10 @@ public class Group implements Inviting, Manageable {
         return searchable;
     }
 
+    public int getMaximumMembers() {
+        return max;
+    }
+
     public void isSearchable(boolean searchable) {
         this.searchable = searchable;
     }

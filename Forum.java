@@ -1,3 +1,4 @@
+import javax.naming.LimitExceededException;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Forum {
@@ -467,44 +468,53 @@ public class Forum {
                       }
                   }
                   if (!groupExists) {
-                      groups.add(new Group(groupName, new Moderator(current)));
-                      System.out.println("New group \"" + groupName + "\" has been created.");
-                      System.out.println("Enter a description for the group, can also leave it blank: ");
-                      input = s.nextLine();
-                      String description = input;
-                      System.out.println("Would you like it to be listed publicly in the group view?\ny or n");
-                      input = s.nextLine();
-                      if (input.equalsIgnoreCase("y")) {
-                          for (Group g : groups) {
-                              if (g.getGroupName().equals(groupName)) {
-                                  g.isSearchable(true);
-                                  g.addMember(current);
-                                  g.makeModerator(current);
-                                  g.setDescription(description);
-                                  current.addGroupMembership(g);
-                                  System.out.println("Group \"" + groupName + "\" will be listed.");
+                      try {
+                          if (groups.size() >= 100) {
+                              throw new LimitExceededException("LimitExceededException: Cannot add more groups, 100 is the maximum amount of possible groups.");
+
+                          } else if (groups.size() < 100){
+                              groups.add(new Group(groupName, new Moderator(current)));
+                              System.out.println("New group \"" + groupName + "\" has been created.");
+                              System.out.println("Enter a description for the group, can also leave it blank: ");
+                              input = s.nextLine();
+                              String description = input;
+                              System.out.println("Would you like it to be listed publicly in the group view?\ny or n");
+                              input = s.nextLine();
+                              if (input.equalsIgnoreCase("y")) {
+                                  for (Group g : groups) {
+                                      if (g.getGroupName().equals(groupName)) {
+                                          g.isSearchable(true);
+                                          g.addMember(current);
+                                          g.makeModerator(current);
+                                          g.setDescription(description);
+                                          current.addGroupMembership(g);
+                                          System.out.println("Group \"" + groupName + "\" will be listed.");
+                                      }
+                                  }
+                              } else if (input.equalsIgnoreCase("n")) {
+                                  for (Group g : groups) {
+                                      if (g.getGroupName().equals(groupName)) {
+                                          g.isSearchable(false);
+                                          g.addMember(current);
+                                          g.makeModerator(current);
+                                          g.setDescription(description);
+                                          System.out.println("Group " + groupName + " will not be listed.");
+                                      }
+                                  }
+                              } else {
+                                  System.out.println("Invalid input, group will be defaulted to public.");
+                                  for (Group g : groups) {
+                                      if (g.getGroupName().equals(groupName)) {
+                                          g.isSearchable(true);
+                                          g.addMember(current);
+                                          g.makeModerator(current);
+                                          System.out.println("Group \"" + groupName + "\" will be listed.");
+                                      }
+                                  }
                               }
                           }
-                      } else if (input.equalsIgnoreCase("n")) {
-                          for (Group g : groups) {
-                              if (g.getGroupName().equals(groupName)) {
-                                  g.isSearchable(false);
-                                  g.addMember(current);
-                                  g.makeModerator(current);
-                                  g.setDescription(description);
-                                  System.out.println("Group " + groupName + " will not be listed.");
-                              }
-                          }
-                      } else {
-                          System.out.println("Invalid input, group will be defaulted to public.");
-                          for (Group g : groups) {
-                              if (g.getGroupName().equals(groupName)) {
-                                  g.isSearchable(true);
-                                  g.addMember(current);
-                                  g.makeModerator(current);
-                                  System.out.println("Group \"" + groupName + "\" will be listed.");
-                              }
-                          }
+                      } catch (LimitExceededException e) {
+                          System.out.println(e.getMessage());
                       }
                   } else {
                       System.out.println("Cannot create group, one already exists with this name.");

@@ -1,5 +1,5 @@
 public interface Inviting {
-    int maxUsers = 50;
+    int max = 100;
 
     void inviteUser(Consumer consumer);
 }
