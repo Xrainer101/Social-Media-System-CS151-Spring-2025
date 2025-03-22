@@ -8,7 +8,7 @@ public class ChildUser extends User {
     public ChildUser(String username, String password) {
       this.username = username;
       this.password = password;
-      groupInvites = new ArrayList<>();
+      groupInvites = new ArrayList<Group>();
     }
 
     private void manageChildInvitations() {
@@ -132,13 +132,13 @@ public class ChildUser extends User {
     }
 
     @Override
-    public void message(User) {
+    public void message(User u) {
          //This was probably already implementing in one of your branches
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void requestJoin(Group) {
+    public void requestJoin(Group group) {
          //Probably already implemented somewhere else
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -5,9 +5,9 @@ public abstract class User implements Manageable{
     public abstract void delete();
     public abstract String getUsername();
     public abstract String getPassword();
-    public abstract public ArrayList<Group> getGroupInvites();
-    public abstract void message(User);
-    public abstract void requestJoin(Group);
+    public abstract ArrayList<Group> getGroupInvites();
+    public abstract void message(User user);
+    public abstract void requestJoin(Group group);
     public abstract void usersOnline();
     public abstract void addGroupInvite(Group group);
 }

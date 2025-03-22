@@ -109,22 +109,6 @@ public class Consumer extends User {
       }
    }
 
-   public void acceptGroupInvite(Group group) {
-      boolean foundGroup = false;
-      for (Group g : groupInvites) {
-          if (group.getGroupName().equals(g.getGroupName())) {
-              foundGroup = true;
-              break;
-          }
-      }
-      if (foundGroup) {
-         groupInvites.remove(group);
-         groups.add(group);
-      } else {
-         System.out.println(username + " is not in the group " + group.getGroupName());
-      }
-   }
-
    public Messages getMessages() {
        return messages;
    }
@@ -266,13 +250,13 @@ public class Consumer extends User {
     }
 
     @Override
-    public void message(User) {
+    public void message(User u) {
          //This was probably already implementing in one of your branches
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void requestJoin(Group) {
+    public void requestJoin(Group group) {
          //Probably already implemented somewhere else
         throw new UnsupportedOperationException("Not supported yet.");
     }
