@@ -252,6 +252,7 @@ public class Forum {
                               }
                               System.out.println("c: change group settings");
                               System.out.println("g: clear/modify group description");
+                              System.out.println("v: view group posts");
                               System.out.println("i: invite");
                               System.out.println("a: accept join requests");
                               System.out.println("r: remove member");
@@ -276,6 +277,8 @@ public class Forum {
                                           }
                                       }
                                   }
+                              } else if (input.equalsIgnoreCase("v")) {
+                                  viewedGroup.viewPosts(s, null, current);
                               } else if (input.equalsIgnoreCase("l")) {
                                   System.out.println("y or n: Are you sure you want to leave the group?");
                                   input = s.nextLine();
@@ -389,10 +392,22 @@ public class Forum {
                           } else if (viewedGroup.getGroupMembers().contains(current)) {
                               viewedGroup.metrics();
                               System.out.println("You are a member of the group.");
+                              System.out.println("m: make a group post");
+                              System.out.println("v: view group posts");
                               System.out.println("l: leave group");
                               System.out.println("q: to stop viewing this group");
                               input = s.nextLine();
-                              if (input.equalsIgnoreCase("l")) {
+                              if (input.equalsIgnoreCase("m")) {
+                                  System.out.println("Enter Post: ");
+                                  String post = s.nextLine();
+                                  viewedGroup.addPost(post, current);
+                                  System.out.println();
+                                  System.out.println("Post added successfully");
+                                  System.out.println();
+                                  System.out.println();
+                              } else if (input.equalsIgnoreCase("v")) {
+                                  viewedGroup.viewPosts(s, null, current);
+                              } else if (input.equalsIgnoreCase("l")) {
                                   System.out.println("y or n: Are you sure you want to leave the group?");
                                   input = s.nextLine();
                                   if (input.equalsIgnoreCase("y")) {
@@ -404,17 +419,20 @@ public class Forum {
                                   System.out.println("Exiting view of group: " + viewedGroup.getGroupName());
                                   return;
                               }
-                          } else if (!viewedGroup.getGroupMembers().contains(current) && !viewedGroup.getModerators().contains(current)) {
-                              viewedGroup.metrics();
-                              System.out.println("You are not a member of the group.");
-                              System.out.println("j: join group");
-                              System.out.println("q: to stop viewing this group");
-                              input = s.nextLine();
-                              if (input.equalsIgnoreCase("j")) {
+                             } else if (!viewedGroup.getGroupMembers().contains(current) && !viewedGroup.getModerators().contains(current)) {
+                                 viewedGroup.metrics();
+                                 System.out.println("You are not a member of the group.");
+                                 System.out.println("v: view posts");
+                                 System.out.println("j: join group");
+                                 System.out.println("q: to stop viewing this group");
+                                 input = s.nextLine();
+                                 if (input.equalsIgnoreCase("j")) {
                                   viewedGroup.requestJoin(current);
                                   if (current.getGroupMembership().contains((viewedGroup))) {
                                       current.addGroupMembership(viewedGroup);
                                   }
+                              } else if (input.equalsIgnoreCase("v")) {
+                                     viewedGroup.viewPosts(s, null, current);
                               } else if (input.equalsIgnoreCase("q")) {
                                   System.out.println("Exiting view of group: " + viewedGroup.getGroupName());
                                   return;

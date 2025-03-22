@@ -265,6 +265,87 @@ public class Group implements Inviting, Manageable {
         }
     }
 
+    public void addPost(String description, Consumer current) {
+        for(int i = 0; i < groupMembers.size(); i++) {
+            if (groupMembers.get(i).getUsername().equalsIgnoreCase(current.getUsername())) {
+                groupMembers.get(i).addPost(description);
+            }
+        }
+    }
+
+    public void viewPosts(Scanner s, Consumer user, Consumer current) {
+        boolean done = false;
+        boolean hasPosts = false;
+        boolean isMod = false;
+        Moderator currentModerator = null;
+        for (Moderator m : moderators) {
+            if (m.getModerator().getUsername().equals(current.getUsername())) {
+                isMod = true;
+                currentModerator = m;
+            }
+        }
+        while(!done) {
+            for(int j = 0; j < groupMembers.size(); j++) {
+                System.out.println(groupMembers.get(j).getUsername() + " [" + j + "]'s posts");
+                for(int i = 0; i < groupMembers.get(j).getPosts().size(); i++) {
+                    System.out.print("[" + i + "]: " + groupMembers.get(j).getPost(i).getDescription());
+                    System.out.println(" Likes: " + groupMembers.get(j).getPost(i).getLikes());
+                    if (!groupMembers.get(j).getPosts().isEmpty()) {
+                        hasPosts = true;
+                    }
+                }
+            }
+            System.out.println("Would you like to view more about a specific post (y/n)");
+            String input = s.nextLine();
+            Forum.tryExit(input,s);
+            if(input.equals("y")) {
+                boolean valid = false;
+                Post target = null;
+                while(!valid) {
+                    try {
+                        if(hasPosts) {
+                            System.out.println("Enter member's index: ");
+                            String index = s.nextLine();
+                            int ind = Integer.parseInt(index);
+                            System.out.println("Enter post's index: ");
+                            index = s.nextLine();
+                            int ind2 = Integer.parseInt(index);
+                            target = groupMembers.get(ind).getPost(ind2);
+                            target.viewPost(s, user);
+                            valid = true;
+                        }
+                        else {
+                            System.out.println("This group has no posts to display");
+                            System.out.println("Going back");
+                            System.out.println();
+                            valid = true;
+                            done = true;
+                        }
+                    }
+                    catch(Exception e) {
+                        Forum.tryExit(input,s);
+                        System.out.println("Try again");
+                    }
+                }
+            } else if (isMod) {
+              System.out.println("Would you like to delete a post?");
+              System.out.println("y or n");
+              input = s.nextLine();
+              if (input.equalsIgnoreCase("y")) {
+                  System.out.println("Enter member's index: ");
+                  String index = s.nextLine();
+                  int ind = Integer.parseInt(index);
+                  System.out.println("Enter post's index: ");
+                  index = s.nextLine();
+                  int ind2 = Integer.parseInt(index);
+                  currentModerator.deletePost(groupMembers.get(ind).getPosts(), ind2);
+              }
+            } else {
+                done = true;
+            }
+        }
+    }
+
     public void leaveGroup(Consumer current) {
         boolean isModerator = false;
         Moderator temp = null;

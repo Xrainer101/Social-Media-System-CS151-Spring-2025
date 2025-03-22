@@ -84,6 +84,11 @@ public class Consumer {
    public Messages getMessages() {
        return messages;
    }
+
+   public ArrayList<Post> getPosts() {
+      return posts;
+   }
+
    public void addFriend(Consumer other) {
       this.friends.add(other);
    }
