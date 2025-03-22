@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-public class Consumer {
+public class Consumer extends Sharer {
    private String username;
    private String password;
    private ArrayList<Consumer> friends;
@@ -10,6 +10,7 @@ public class Consumer {
    private ArrayList<Group> groupInvites;
    private ArrayList<Group> groups;
    private boolean isGlobalModerator;
+   private Scanner scanner;
 
    public Consumer(String username, String password) {
       this.username = username;
@@ -22,7 +23,10 @@ public class Consumer {
       messages = new Messages(this);
       isGlobalModerator = false;
    }
-
+   
+   public void setScanner(Scanner s) {
+       scanner = s;
+   }
    public String getUsername() {
       return username;
    }
@@ -171,4 +175,91 @@ public class Consumer {
 
    }
 
+   @Override 
+   public void edit() {
+      boolean done = false;
+      while(!done) {
+            for(int i = 0; i < posts.size(); i++) {
+                System.out.println(i  + ": " +posts.get(i).getDescription());
+            }
+            try {
+                if(posts.size() > 0) {
+                    System.out.println("Enter index of the post you want to edit: ");
+                    int index = Integer.parseInt(scanner.nextLine());
+                    Post currentPost = posts.get(index);
+                    System.out.println("Old Post: " + currentPost.getDescription());
+                    System.out.println("Enter edited post: ");
+                    String editedPost = scanner.nextLine();
+                    currentPost.setDescription(editedPost);
+                    System.out.println(" Message edited successfully");
+                    System.out.println();
+                    done = true;
+                }
+                else {
+                    System.out.println("No posts to edit");
+                    System.out.println();
+                    done = true;
+                }
+                
+
+            }
+            catch(Exception e) {
+                System.out.println("Not valid index, try again");
+                System.out.println();
+            }
+         }
+
+      }
+
+   @Override 
+   public void delete() {
+      boolean done = false;
+      while(!done) {
+            for(int i = 0; i < posts.size(); i++) {
+                System.out.println(i + ": " + posts.get(i).getDescription());
+            }
+            try {
+                if(posts.size() > 0) {
+                    System.out.println("Enter index of the post you want to delete: ");
+                    int index = scanner.nextInt();
+                    posts.remove(posts.get(index));
+                    System.out.println(" Message deleted successfully");
+                    System.out.println();
+                    done = true;
+                }
+                else {
+                    System.out.println("No posts to delete ");
+                    System.out.println();
+                    done = true;
+                }
+                
+
+            }
+            catch(Exception e) {
+                System.out.println("Not valid index, try again");
+                System.out.println();
+            }
+         }
+   }
+   @Override 
+   public void mostPopular() {
+      if(posts.size() == 0) {
+         System.out.println("no posts to display");
+         System.out.println();
+      }
+      else {
+         int max = posts.get(0).getLikes();
+         Post maxPost = posts.get(0);
+         for(int i = 0; i < posts.size(); i++) {
+             if(posts.get(i).getLikes() > max) {
+               max = posts.get(i).getLikes();
+               maxPost = posts.get(i);
+             }
+         }
+         System.out.println("This post has most likes: \n" + maxPost.getDescription());
+         System.out.println("Likes: " + max);
+         System.out.println();
+
+      }
+   }
 }
