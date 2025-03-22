@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-public class Consumer extends Sharer {
+public class Consumer extends Sharer implements Manageable{
    private String username;
    private String password;
    private ArrayList<Consumer> friends;
@@ -35,6 +35,54 @@ public class Consumer extends Sharer {
       return password;
    }
 
+   @Override
+    public void changeSettings() {
+        //Perhaps there should be a change username or change password method
+        Scanner s = new Scanner(System.in);
+        boolean done = false;
+        
+        while(!done) {
+         System.out.println("UN: Change username");
+         System.out.println("PW: Change password");
+         System.out.println("EXIT: End management");
+         String input = s.nextLine();
+         if(input.equals("UN")) {
+             System.out.println("Enter username: ");
+             username = s.nextLine();
+             System.out.println("Username successfully changed");
+             System.out.println();
+         }
+         else if(input.equals("PW")) {
+             System.out.println("Enter password: ");
+             password = s.nextLine();
+             System.out.println("Password successfully changed");
+             System.out.println();
+             
+         }
+         else if(input.equals("EXIT")) {
+             done = true;
+         } else {
+            System.out.println("Invalid input");
+         }
+      }
+    }
+    @Override
+    public void clear() {
+      //delete all messages and posts and such  
+      throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+   @Override
+   public void metrics() {
+         //show number of messages and posts and such
+      throw new UnsupportedOperationException("Not supported yet.");
+   }
+
+   @Override
+   public void delete(Consumer o) {
+      //delete all references to user (from all of the lists that it is in)
+      throw new UnsupportedOperationException("Not supported yet.");
+   }
    public boolean getModeratorStatus() {
       return isGlobalModerator;
    }
@@ -230,7 +278,7 @@ public class Consumer extends Sharer {
       }
 
    @Override 
-   public void delete() {
+   public void deleteSharer() {
       boolean done = false;
       while(!done) {
             try {
