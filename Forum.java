@@ -278,7 +278,7 @@ public class Forum {
                                       }
                                   }
                               } else if (input.equalsIgnoreCase("v")) {
-                                  viewedGroup.viewPosts(s, null, current);
+                                  viewedGroup.viewPosts(s, current, current);
                               } else if (input.equalsIgnoreCase("l")) {
                                   System.out.println("y or n: Are you sure you want to leave the group?");
                                   input = s.nextLine();
@@ -406,7 +406,7 @@ public class Forum {
                                   System.out.println();
                                   System.out.println();
                               } else if (input.equalsIgnoreCase("v")) {
-                                  viewedGroup.viewPosts(s, null, current);
+                                  viewedGroup.viewPosts(s, current, current);
                               } else if (input.equalsIgnoreCase("l")) {
                                   System.out.println("y or n: Are you sure you want to leave the group?");
                                   input = s.nextLine();
@@ -438,7 +438,6 @@ public class Forum {
                                   return;
                               }
                           }
-
                       }
                   } else {
                       System.out.println("Invalid group name");
