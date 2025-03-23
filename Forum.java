@@ -1,3 +1,4 @@
+import javax.naming.LimitExceededException;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Forum {
@@ -33,33 +34,41 @@ public class Forum {
      while(!doneSetup) {
         System.out.println("L: Login");
         System.out.println("S: Sign Up");
+        System.out.println("D: Delete User");
         System.out.println("EXIT: exits program(loses all data)");
         System.out.println("Enter input based on key");
         String input = s.nextLine();
         tryExit(input, s);
         if (input.equals("S")) {
-            System.out.println("Enter username: ");
-            String username = s.nextLine();
-            System.out.println("Enter password: ");
-            String password = s.nextLine();
-            boolean exist = false;
-            for(Consumer U: Users) {
-               if(U.getUsername().equals(username)) {
-                  exist = true;
-                  break;
-               }
-            }
-            if(!exist) {
-            Users.add(new Consumer(username, password));
-            System.out.println();
-            System.out.println("Signup successful");
-            System.out.println();
-            System.out.println();
-            }
-            else {
-               System.out.println("This username is already in use!");
-               System.out.println("try again!");
-               System.out.println();
+            try {
+                if (Users.size() >= 100) {
+                    throw new LimitExceededException("LimitExceededException: Cannot signup more users, 100 is the maximum amount of possible users.");
+                } else if (Users.size() < 100) {
+                    System.out.println("Enter username: ");
+                    String username = s.nextLine();
+                    System.out.println("Enter password: ");
+                    String password = s.nextLine();
+                    boolean exist = false;
+                    for (Consumer U : Users) {
+                        if (U.getUsername().equals(username)) {
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if (!exist) {
+                        Users.add(new Consumer(username, password));
+                        System.out.println();
+                        System.out.println("Signup successful");
+                        System.out.println();
+                        System.out.println();
+                    } else {
+                        System.out.println("This username is already in use!");
+                        System.out.println("try again!");
+                        System.out.println();
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
         else if(input.equals("L")) {
@@ -84,11 +93,37 @@ public class Forum {
             }
 
         }
+        else if(input.equals("D")) {
+            System.out.println("Enter username: ");
+            String username = s.nextLine();
+            System.out.println("Enter password");
+            String password = s.nextLine();
+            boolean found = false;
+            if(validateInfo(username, password)) {
+            for(Consumer c: Users) {
+                if(c.getUsername().equals(username)) {
+                    c.delete(c);
+                    found = true;
+                }
+            }
+            }
+            else {
+                found = false;
+            }
+            if(!found) {
+                System.out.println();
+                System.out.println("This user does not exist or wrong password. Can't delete");
+                System.out.println("Try again!");
+                System.out.println();
+                System.out.println();
+            }
+        }
+            
+        }
 
 
      }
 
-   }
    // please add a printline statement in the same format and an if statement.
    // to implement functionality.
    public static void functionality(Scanner s) {
@@ -103,6 +138,12 @@ public class Forum {
           System.out.println("af: add friend");
           System.out.println("vg: view groups");
           System.out.println("pm: private messaging");
+          System.out.println("vm: view metrics");
+          System.out.println("cd: clear post data");
+          System.out.println("ep: edit post");
+          System.out.println("dp: delete Post");
+          System.out.println("ml: findMostLikedPost");
+          System.out.println("cs: changeSettings");
           System.out.println("lo: logout");
           System.out.println("EXIT: exits program(loses all data)");
           System.out.println("Enter input(2 character): ");
@@ -114,11 +155,20 @@ public class Forum {
           } else if (input.equals("mp")) {
               System.out.println("Enter Post: ");
               String post = s.nextLine();
-              current.addPost(post);
-              System.out.println();
-              System.out.println("Post added successfully");
-              System.out.println();
-              System.out.println();
+              
+              if(current.addPost(post)) {
+                System.out.println();
+                System.out.println("Post added successfully");
+                System.out.println();
+                System.out.println();
+              }
+              else {
+                System.out.println();
+                System.out.println("Post not added");
+                System.out.println();
+                System.out.println();
+              }
+               
               } else if (input.equals("vp")) {
                   current.viewPosts(s, null);
               } else if(input.equals("af")) {
@@ -176,7 +226,23 @@ public class Forum {
 
               } else if (input.equals("pm")) {
                   current.getMessages().UI(s);
-              } else if (input.equalsIgnoreCase("mu") && (current.getModeratorStatus())) {
+              } 
+              else if(input.equals("ep")) {
+                  current.setScanner(s);
+                  current.edit();
+              }else if(input.equals("dp")) {
+                current.setScanner(s);
+                current.deleteSharer();
+              }else if(input.equals("ml")){
+                current.setScanner(s);
+                current.mostPopular();
+              } else if(input.equals("cs")){
+                current.changeSettings();
+              }else if(input.equals("vm")) {
+                current.metrics();
+              }else if(input.equals("cd")){
+                current.clear();
+              }else if (input.equalsIgnoreCase("mu") && (current.getModeratorStatus())) {
               System.out.println("Input the name of the user you would like to modify: ");
               Consumer selectedConsumer = null;
               input = s.nextLine();
@@ -295,7 +361,9 @@ public class Forum {
                                       if (c.getUsername().equalsIgnoreCase(input)) {
                                           foundUser = true;
                                           viewedGroup.inviteUser(c);
-                                          c.addGroupInvite(viewedGroup);
+                                          if (viewedGroup.getGroupMaximumSize() < 100) {
+                                              c.addGroupInvite(viewedGroup);
+                                          }
                                       }
                                   }
                                   if (!foundUser) {
@@ -453,44 +521,52 @@ public class Forum {
                       }
                   }
                   if (!groupExists) {
-                      groups.add(new Group(groupName, new Moderator(current)));
-                      System.out.println("New group \"" + groupName + "\" has been created.");
-                      System.out.println("Enter a description for the group, can also leave it blank: ");
-                      input = s.nextLine();
-                      String description = input;
-                      System.out.println("Would you like it to be listed publicly in the group view?\ny or n");
-                      input = s.nextLine();
-                      if (input.equalsIgnoreCase("y")) {
-                          for (Group g : groups) {
-                              if (g.getGroupName().equals(groupName)) {
-                                  g.isSearchable(true);
-                                  g.addMember(current);
-                                  g.makeModerator(current);
-                                  g.setDescription(description);
-                                  current.addGroupMembership(g);
-                                  System.out.println("Group \"" + groupName + "\" will be listed.");
+                      try {
+                          if (groups.size() >= 100) {
+                              throw new LimitExceededException("LimitExceededException: Cannot create more groups, 100 is the maximum amount of possible groups.");
+                          } else if (groups.size() < 100){
+                              groups.add(new Group(groupName, new Moderator(current)));
+                              System.out.println("New group \"" + groupName + "\" has been created.");
+                              System.out.println("Enter a description for the group, can also leave it blank: ");
+                              input = s.nextLine();
+                              String description = input;
+                              System.out.println("Would you like it to be listed publicly in the group view?\ny or n");
+                              input = s.nextLine();
+                              if (input.equalsIgnoreCase("y")) {
+                                  for (Group g : groups) {
+                                      if (g.getGroupName().equals(groupName)) {
+                                          g.isSearchable(true);
+                                          g.addMember(current);
+                                          g.makeModerator(current);
+                                          g.setDescription(description);
+                                          current.addGroupMembership(g);
+                                          System.out.println("Group \"" + groupName + "\" will be listed.");
+                                      }
+                                  }
+                              } else if (input.equalsIgnoreCase("n")) {
+                                  for (Group g : groups) {
+                                      if (g.getGroupName().equals(groupName)) {
+                                          g.isSearchable(false);
+                                          g.addMember(current);
+                                          g.makeModerator(current);
+                                          g.setDescription(description);
+                                          System.out.println("Group " + groupName + " will not be listed.");
+                                      }
+                                  }
+                              } else {
+                                  System.out.println("Invalid input, group will be defaulted to public.");
+                                  for (Group g : groups) {
+                                      if (g.getGroupName().equals(groupName)) {
+                                          g.isSearchable(true);
+                                          g.addMember(current);
+                                          g.makeModerator(current);
+                                          System.out.println("Group \"" + groupName + "\" will be listed.");
+                                      }
+                                  }
                               }
                           }
-                      } else if (input.equalsIgnoreCase("n")) {
-                          for (Group g : groups) {
-                              if (g.getGroupName().equals(groupName)) {
-                                  g.isSearchable(false);
-                                  g.addMember(current);
-                                  g.makeModerator(current);
-                                  g.setDescription(description);
-                                  System.out.println("Group " + groupName + " will not be listed.");
-                              }
-                          }
-                      } else {
-                          System.out.println("Invalid input, group will be defaulted to public.");
-                          for (Group g : groups) {
-                              if (g.getGroupName().equals(groupName)) {
-                                  g.isSearchable(true);
-                                  g.addMember(current);
-                                  g.makeModerator(current);
-                                  System.out.println("Group \"" + groupName + "\" will be listed.");
-                              }
-                          }
+                      } catch (LimitExceededException e) {
+                          System.out.println(e.getMessage());
                       }
                   } else {
                       System.out.println("Cannot create group, one already exists with this name.");
@@ -512,7 +588,9 @@ public class Forum {
                           if (current.getGroupInvites().get(i).getGroupName().equals(input)) {
                               for (int j = 0; j < groups.size(); j++) {
                                   groups.get(j).acceptedInvite(current);
+                                  if (groups.get(j).getGroupMaximumSize() < 100) {
                                   current.acceptGroupInvite(groups.get(j));
+                                  }
                               }
                           }
                       }

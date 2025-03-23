@@ -1,3 +1,4 @@
+import javax.naming.LimitExceededException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -44,6 +45,10 @@ public class Group implements Inviting, Manageable {
         return moderators;
     }
 
+    public int getGroupMaximumSize() {
+        return max;
+    }
+
     public boolean getSearchable() {
         return searchable;
     }
@@ -54,6 +59,12 @@ public class Group implements Inviting, Manageable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void fullGroup() throws LimitExceededException {
+        if (groupMembers.size() >= max) {
+            throw new LimitExceededException("LimitExceededException: Cannot add/invite when the group is at 100 members.");
+        }
     }
 
     public void changeGroupName(String name, Consumer current) {
@@ -72,6 +83,12 @@ public class Group implements Inviting, Manageable {
     }
 
     public void requestJoin(Consumer current) {
+        try {
+            fullGroup();
+        } catch (LimitExceededException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         boolean isMod = false;
         for (Moderator m: moderators) {
             if(m.getModerator().equals(current)) {
@@ -97,6 +114,12 @@ public class Group implements Inviting, Manageable {
 
     @Override
     public void inviteUser(Consumer consumer) {
+        try {
+            fullGroup();
+        } catch (LimitExceededException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         boolean alreadyInvited = false;
         for (Consumer c : groupMembers) {
             if (c.equals(consumer)) {
@@ -204,6 +227,12 @@ public class Group implements Inviting, Manageable {
     }
 
     public void acceptedInvite(Consumer consumer) {
+        try {
+            fullGroup();
+        } catch (LimitExceededException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         invited.remove(consumer);
         groupMembers.add(consumer);
         System.out.println(consumer.getUsername() + " has accepted the group invite");
