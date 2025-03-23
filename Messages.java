@@ -1,3 +1,4 @@
+import javax.naming.LimitExceededException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,12 +35,30 @@ public class Messages extends Sharer {
         String message = scanner.nextLine();
         
         Consumer friend = user.checkFriend(recipient);
+        try {
+            maxSentMessages();
+            maxReceivedMessages(friend);
+        } catch (LimitExceededException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         sentMessages.add(new Message(message, friend));
-        
         friend.getMessages().receivedMessages.add(new Message(message, user));
         System.out.println("Message sent to " + recipient);
     }
-    
+
+    public void maxSentMessages() throws LimitExceededException {
+        if (sentMessages.size() >= 100) {
+            throw new LimitExceededException("LimitExceededException: Cannot send, max messages sent.");
+        }
+    }
+
+    public void maxReceivedMessages(Consumer friend) throws LimitExceededException {
+        if (friend.getMessages().receivedMessages.size() >= 100) {
+            throw new LimitExceededException("LimitExceededException: Cannot send, friend's message inbox is full");
+        }
+    }
+
     public Message findReceivedMessage(Consumer from, String message) {
            for(Message M : receivedMessages) {
                if(M.text.equals(message) && M.person == from) {
