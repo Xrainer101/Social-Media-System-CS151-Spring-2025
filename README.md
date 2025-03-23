@@ -7,11 +7,12 @@ Classes:
 * Group - holds consumers, basically a sub-forum where assigned moderators can delete posts and remove other users from the group
 * Messages -  message functionality, holds the information and ui to let users send and receive messages from friends.
 * Moderator - user but with the ability to delete posts from groups, groups, and other users
-* Consumer - basic user, holds username/passwrod, posts, messages, friends
+* Consumer - basic user, holds username/password, posts, messages, friends
 * Post - post functionality, holds information regarding the description of the post and the amount of likes it has. nested comment class lets it hold comments.
 * Sharer - abstract class that shares some functionality with messages and posts.
 * Maneagable interface - allows us to change properties like usernames, passwords, group data. Allows deleting Users or group data and gives you some general information about the group or user.
-Our social media system is designed where the Forum class functions as the main database, holding the registered Consumers and created Groups. Posts, Friends, and Messages are held within Consumer. When a user logs into our system, they're the designated current Consumer and is given a menu that lets them view posts, view groups, view or add friends, message other users, change settings, or start any other feature. Each feature has their own submenus where the user is guided through them and has to answer questions about what they want to do in that feature. When the user is finished and ready to logout, they are able to logout and either sign up for a new account or login to a new one.
+  
+Our social media system is designed where the Forum class functions as the main database, holding the registered Consumers and created Groups. Posts, Friends, and Messages are held within Consumer. When a user logs into our system, they're the designated current Consumer and is given a menu that lets them view posts, view groups, view or add friends, message other users, change settings, or start any other feature. Each feature has their own submenus where the user is guided through them and has to answer questions about what they want to do in that feature. When the user is finished and ready to logout, they are able to logout and either sign up for a new account or login to a new one. For designing the ui, we wanted to make it straightforward and easy to navigate.
 # Installation Instructions
 * Clone this repository: https://github.com/Xrainer101/Social-Media-System-CS151-Spring-2025
 # Usage
@@ -30,4 +31,4 @@ Our social media system is designed where the Forum class functions as the main 
 * Steven: created Moderator and Group classes, Forum functionality for Group, wrote the README and made the UML diagram, Design
 * Saivardan Mamidi: Forum (linking stuff from other classes), general functionality (adding friends, posts), abstract class for posts and messages.
 * Hetav Vyas: Private messaging, Design
-* Isaac Kim: Created Interfaces, worked on impementing interfaces to different classes, Design
+* Isaac Kim: Created Interfaces, worked on implementing interfaces to different classes, Design
