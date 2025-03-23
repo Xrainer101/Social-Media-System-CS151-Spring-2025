@@ -181,7 +181,7 @@ public class Forum {
                   }
                }
                if(result != null && current.checkFriend(result.getUsername()) == null) {
-                  if(current.checkRequests(result)) {
+                  if(current.checkRequests(result)) { 
                      System.out.println("This friend sent a request!");
                      System.out.println("Accept request from " + result.getUsername() + "(y/n)");
                      String choice = s.nextLine();
@@ -203,7 +203,8 @@ public class Forum {
                         System.out.println("Waiting on friend");
                      }
                      else {
-                     System.out.println("Sending friend Request");
+                     System.out.println("Sent friend Request");
+                     System.out.println("Log into " + result.getUsername() + " account and go to af " + "to add " + current.getUsername());
                      System.out.println();
                      result.addRequest(current);
                      }
