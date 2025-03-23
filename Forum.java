@@ -133,8 +133,8 @@ public class Forum {
           if (current.getModeratorStatus()) {
               System.out.println("mu: modify user");
           }
-          System.out.println("vp: viewPosts");
-          System.out.println("vf: viewFriend");
+          System.out.println("vp: view your own posts");
+          System.out.println("vf: view friends posts");
           System.out.println("af: add friend");
           System.out.println("vg: view groups");
           System.out.println("pm: private messaging");

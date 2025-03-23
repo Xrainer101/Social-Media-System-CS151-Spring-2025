@@ -87,7 +87,7 @@ public class Post {
         }
       
         if (friend != null) {
-            System.out.println("add comment (enter y to add): ");
+            System.out.println("add comment (y/n): ");
             String input = s.nextLine();
             if(input.equals("y")) {
                 addComment(s, friend);
