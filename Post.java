@@ -1,3 +1,4 @@
+import javax.naming.LimitExceededException;
 import java.util.Scanner;
 import java.util.ArrayList;
 public class Post {
@@ -27,8 +28,21 @@ public class Post {
         System.out.println("Enter Comment: ");
         String description = s.nextLine();
         Comment c = new Comment(description, friend);
+        try {
+            maxComments();
+        } catch (LimitExceededException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         comments.add(c);
     }
+
+    public void maxComments() throws LimitExceededException {
+        if (comments.size() >= 100) {
+            throw new LimitExceededException("LimitExceededException: Cannot comment, post has maximum number of comments.");
+        }
+    }
+
     public String getDescription() {
          return description;
     }
