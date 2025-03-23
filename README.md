@@ -30,5 +30,5 @@ Our social media system is designed where the Forum class functions as the main 
 # Contributions
 * Steven: created Moderator and Group classes, Forum functionality for Group, wrote the README and made the UML diagram, Design
 * Saivardan Mamidi: Forum (linking stuff from other classes), general functionality (adding friends, posts), abstract class for posts and messages.
-* Hetav Vyas: Private messaging(UI, sending, receiving), Design
+* Hetav Vyas: I implemented Private Messaging class in Java, including features for sending and receiving messages, displaying sent messages, managing friends.
 * Isaac Kim: Created Interfaces, worked on implementing interfaces to different classes, experimented on an abstract class for User, Design
